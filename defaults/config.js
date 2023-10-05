@@ -216,7 +216,7 @@ module.exports = {
 	//
 	// This value is set to `"The Lounge - https://thelounge.chat"` by
 	// default.
-	leaveMessage: "The Lounge - https://thelounge.chat",
+	leaveMessage: "The Lounge: Hard Chats Edition - https://git.supernets.org/supernets/thelounge",
 
 	// ## Default network
 
@@ -263,17 +263,18 @@ module.exports = {
 	// }
 	// ```
 	defaults: {
-		name: "Libera.Chat",
-		host: "irc.libera.chat",
+		name: "SuperNETs",
+		host: "irc.supernets.org",
 		port: 6697,
 		password: "",
 		tls: true,
 		rejectUnauthorized: true,
-		nick: "thelounge%%",
-		username: "thelounge",
+		nick: "webchat%%",
+		username: "webchat",
 		realname: "",
-		join: "#thelounge",
-		leaveMessage: "",
+		join: "#superbowl",
+		leaveMessage:
+			"The Lounge: Hard Chats Edition - https://git.supernets.org/supernets/thelounge",
 	},
 
 	// ### `lockNetwork`
