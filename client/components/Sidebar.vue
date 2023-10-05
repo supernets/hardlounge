@@ -5,13 +5,13 @@
 				<img
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg.svg`"
 					class="logo"
-					alt="The Lounge"
+					alt="SuperNETs"
 					role="presentation"
 				/>
 				<img
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg-inverted.svg`"
 					class="logo-inverted"
-					alt="The Lounge"
+					alt="SuperNETs"
 					role="presentation"
 				/>
 				<span
