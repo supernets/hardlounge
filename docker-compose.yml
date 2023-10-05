@@ -1,0 +1,7 @@
+services:
+  thelounge:
+    image: git.supernets.org/supernets/thelounge:4.4.1.1
+    ports:
+      - "9000:9000"
+    volumes:
+      - "$PWD/config:/var/opt/thelounge"
