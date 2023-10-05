@@ -4,7 +4,8 @@ RUN apk add --no-cache --virtual=build-dependencies build-base git python3-dev &
 USER node
 WORKDIR /var/opt/thelounge-src
 ENV THELOUNGE_HOME /var/opt/thelounge
-RUN git clone https://git.supernets.org/supernets/thelounge.git --depth 1 .
+COPY . .
+#RUN git clone https://git.supernets.org/supernets/thelounge.git --depth 1 .
 RUN yarn install && \
     NODE_ENV=production yarn build && \
     yarn link && \
