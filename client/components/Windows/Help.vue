@@ -7,7 +7,7 @@
 			<h1 class="title">Help</h1>
 
 			<h2 class="help-version-title">
-				<span>About The Lounge</span>
+				<span>About The Lounge: Hard Chats Edition</span>
 				<small>
 					v{{ store.state.serverConfiguration?.version }} (<router-link
 						id="view-changelog"
@@ -19,48 +19,9 @@
 
 			<div class="about">
 				<VersionChecker />
-
-				<template v-if="store.state.serverConfiguration?.gitCommit">
-					<p>
-						The Lounge is running from source (<a
-							:href="`https://github.com/thelounge/thelounge/tree/${store.state.serverConfiguration?.gitCommit}`"
-							target="_blank"
-							rel="noopener"
-							>commit <code>{{ store.state.serverConfiguration?.gitCommit }}</code></a
-						>).
-					</p>
-
-					<ul>
-						<li>
-							Compare
-							<a
-								:href="`https://github.com/thelounge/thelounge/compare/${store.state.serverConfiguration?.gitCommit}...master`"
-								target="_blank"
-								rel="noopener"
-								>between
-								<code>{{ store.state.serverConfiguration?.gitCommit }}</code> and
-								<code>master</code></a
-							>
-							to see what you are missing
-						</li>
-						<li>
-							Compare
-							<a
-								:href="`https://github.com/thelounge/thelounge/compare/${store.state.serverConfiguration?.version}...${store.state.serverConfiguration?.gitCommit}`"
-								target="_blank"
-								rel="noopener"
-								>between
-								<code>{{ store.state.serverConfiguration?.version }}</code> and
-								<code>{{ store.state.serverConfiguration?.gitCommit }}</code></a
-							>
-							to see your local changes
-						</li>
-					</ul>
-				</template>
-
 				<p>
 					<a
-						href="https://thelounge.chat/"
+						href="https://git.supernets.org/supernets/thelounge/"
 						target="_blank"
 						rel="noopener"
 						class="website-link"
@@ -78,13 +39,24 @@
 				</p>
 				<p>
 					<a
-						href="https://github.com/thelounge/thelounge/issues/new"
+						href="https://git.supernets.org/supernets/thelounge/issues/new"
 						target="_blank"
 						rel="noopener"
 						class="report-issue-link"
 						>Report an issue…</a
 					>
 				</p>
+			</div>
+
+			<h2>COLD HARD CHATS</h2>
+
+			<div class="help-item">
+				<div class="description">
+					<p>
+						IRC.SUPERNETS.ORG #SUPERBOWL FUCK YOUR NETWORK COLD HARD CHATS THIS IS NOT
+						YOUR DADS FOOTBALL CHANNEL
+					</p>
+				</div>
 			</div>
 
 			<h2 v-if="isTouch">Gestures</h2>
