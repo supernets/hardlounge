@@ -12,7 +12,12 @@ const ctcpResponses = {
 			.join(" "),
 	PING: ({message}: {message: string}) => message.substring(5),
 	SOURCE: () => pkg.repository.url,
-	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
+	VERSION: () =>
+		"The Lounge: Hard Chats Edition - COLD HARD CHATS ONLY IN IRC.SUPERNETS.ORG #SUPERBOWL FUCK YOUR NETWORK - " +
+		Helper.getVersion() +
+		" -- " +
+		pkg.homepage,
+	CHATS: () => "COLD AND HARD",
 };
 
 export default <IrcEventHandler>function (irc, network) {
