@@ -1,5 +1,5 @@
 {
-  "name": "thelounge",
+  "name": "thelounge-sn",
   "description": "The self-hosted Web IRC client",
   "version": "4.4.1",
   "preferGlobal": true,
@@ -8,9 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thelounge/thelounge.git"
+    "url": "https://git.supernets.org/supernets/thelounge"
   },
-  "homepage": "https://thelounge.chat/",
+  "homepage": "https://git.supernets.org/supernets/thelounge",
   "scripts": {
     "build:client": "webpack",
     "build:server": "tsc -p server/tsconfig.json",
