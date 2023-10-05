@@ -131,7 +131,7 @@ export default defineComponent({
 
 		const getInputPlaceholder = (channel: ClientChan) => {
 			if (channel.type === "channel" || channel.type === "query") {
-				return `Write to ${channel.name}`;
+				return `HARD CHATS IN ${channel.name}`;
 			}
 
 			return "";
