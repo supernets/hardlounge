@@ -1,5 +1,5 @@
 {
-  "name": "thelounge-sn",
+  "name": "@supernets/thelounge",
   "description": "The self-hosted Web IRC client",
   "version": "4.4.1",
   "preferGlobal": true,
