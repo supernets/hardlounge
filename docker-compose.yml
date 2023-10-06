@@ -1,6 +1,7 @@
 services:
   thelounge:
-    image: git.supernets.org/supernets/thelounge:4.4.1-sn1
+    image: git.supernets.org/supernets/thelounge:latest
+    #build: .
     ports:
       - "9000:9000"
     volumes:
