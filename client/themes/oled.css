@@ -29,12 +29,6 @@
     border-right: 1px solid var(--border-color);
 }
 
-#sidebar .channel-list-item .badge {
-    font-weight: bold;
-    font-size: 10px;
-    padding: 0px 3px;
-}
-
 #chat .msg[data-type="monospace_block"] .text {
     background-color: #000000;
 }
