@@ -13,3 +13,7 @@ This is a fork of The Lounge intended to be used for the SuperNETs Webchat (loca
 # Support
 
 If for some reason you decide to run our version of this container, we are more than happy to support you in #5000 on irc.supernets.org
+
+# Credits
+
+- All developers & contributors of The Lounge - https://github.com/thelounge/thelounge
