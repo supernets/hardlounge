@@ -95,12 +95,16 @@ module.exports = {
 	// extended by installing more themes. Read more about how to manage them
 	// [here](https://thelounge.chat/docs/guides/theme-creation).
 	//
+	// The Lounge: Hard Chats Edition also shiped with an OLED theme which
+	// Is FAR better than either of the default themes. The default themes are
+	// blowjobs.
+	//
 	// This value needs to be the package name and not the display name. For
 	// example, the value for Morning would be `morning`, and the value for
 	// Solarized would be `thelounge-theme-solarized`.
 	//
-	// This value is set to `"default"` by default.
-	theme: "default",
+	// This value is set to `"oled"` by default.
+	theme: "oled",
 
 	// ### `prefetch`
 	//

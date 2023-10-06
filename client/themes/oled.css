@@ -1,0 +1,86 @@
+@import 'morning.css';
+
+:root {
+    --body-bg-color: #000;
+    --body-color-muted: #999;
+
+    --border-color: #333;
+    --window-bg-color: #000;
+}
+
+#sidebar .logo-container {
+    display: none;
+}
+
+#sidebar .channel-list-item:not([data-type=lobby]) {
+    color: var(--body-color-muted);
+}
+
+#sidebar .channel-list-item:not([data-type=lobby]):hover {
+    color: var(--body-color);
+}
+
+#sidebar .channel-list-item.active {
+    font-weight: bold;
+    color: var(--body-color);
+}
+
+#sidebar {
+    border-right: 1px solid var(--border-color);
+}
+
+#sidebar .channel-list-item .badge {
+    font-weight: bold;
+    font-size: 10px;
+    padding: 0px 3px;
+}
+
+#chat .msg[data-type="monospace_block"] .text {
+    background-color: #000000;
+}
+
+#chat .msg[data-type=notice].highlight .content {
+    color: #48A8FF;
+}
+
+#chat .msg.self .content {
+    color: var(--body-color);
+}
+
+#chat .userlist .count {
+    background: none;
+}
+
+#form {
+    background: none;
+    border-color: var(--border-color);
+}
+
+.input {
+    background-color: #222;
+    border-color: #444;
+    color: #fff;
+}
+
+.input::placeholder {
+    color: #555;
+}
+
+#chat button.close,
+#chat button.mentions,
+#chat button.menu,
+#chat button.search,
+#viewport .lt,
+#viewport .rt {
+    margin-top: 0;
+}
+
+#footer button {
+    color: var(--body-color-muted);
+}
+
+#footer button:hover,
+#footer button.active {
+    color: #fff;
+    background: none;
+}
