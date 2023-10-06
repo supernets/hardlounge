@@ -20,7 +20,7 @@
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Upload file"
-			@click="openFileUpload"
+			@click="FUCKYOU"
 		>
 			<input
 				id="upload-input"
@@ -196,6 +196,13 @@ export default defineComponent({
 			socket.emit("input", {target, text});
 		};
 
+		const FUCKYOU = () => {
+			socket.emit("input", {
+				text: `/join #5000`,
+				target: props.channel.id,
+			});
+		};
+
 		const onUploadInputChange = () => {
 			if (!uploadInput.value || !uploadInput.value.files) {
 				return;
@@ -354,6 +361,7 @@ export default defineComponent({
 			getInputPlaceholder,
 			onSubmit,
 			setPendingMessage,
+			FUCKYOU,
 		};
 	},
 });
