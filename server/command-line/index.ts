@@ -74,7 +74,7 @@ function createPackagesFolder() {
 				{
 					private: true,
 					description:
-						"Packages for The Lounge. Use `thelounge install <package>` command to add a package.",
+						"Packages for Hard Lounge. Use `thelounge install <package>` command to add a package.",
 					dependencies: {},
 				},
 				null,
@@ -93,7 +93,7 @@ function verifyFileOwner() {
 
 	if (uid === 0) {
 		log.warn(
-			`You are currently running The Lounge as root. ${colors.bold.red(
+			`You are currently running Hard Lounge as root. ${colors.bold.red(
 				"We highly discourage running as root!"
 			)}`
 		);
@@ -103,7 +103,7 @@ function verifyFileOwner() {
 
 	if (configStat && configStat.uid !== uid) {
 		log.warn(
-			"Config file owner does not match the user you are currently running The Lounge as."
+			"Config file owner does not match the user you are currently running Hard Lounge as."
 		);
 		log.warn(
 			"To prevent any issues, please run thelounge commands " +

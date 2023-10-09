@@ -13,7 +13,7 @@ const ctcpResponses = {
 	PING: ({message}: {message: string}) => message.substring(5),
 	SOURCE: () => pkg.repository.url,
 	VERSION: () =>
-		"The Lounge: Hard Chats Edition - COLD HARD CHATS ONLY IN IRC.SUPERNETS.ORG #SUPERBOWL FUCK YOUR NETWORK - " +
+		"Hard Lounge - COLD HARD CHATS ONLY IN IRC.SUPERNETS.ORG #SUPERBOWL FUCK YOUR NETWORK - " +
 		Helper.getVersion() +
 		" -- " +
 		pkg.homepage,

@@ -275,8 +275,8 @@ describe("IRC formatted message parser", () => {
 		},
 		{
 			name: "hex foreground and background colors",
-			input: "\x04415364,ff9e18The Lounge",
-			expected: '<span style="color:#415364;background-color:#FF9E18;">The Lounge</span>',
+			input: "\x04415364,ff9e18Hard Lounge",
+			expected: '<span style="color:#415364;background-color:#FF9E18;">Hard Lounge</span>',
 		},
 		{
 			name: "italic",

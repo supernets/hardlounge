@@ -16,7 +16,7 @@
 	<% }); %>
 	<style id="user-specified-css"></style>
 
-	<title>The Lounge</title>
+	<title>Hard Lounge</title>
 
 	<!-- Browser tab icon -->
 	<link id="favicon" rel="icon" sizes="16x16 32x32 64x64" href="favicon.ico" data-other="img/favicon-alerted.ico" type="image/x-icon">
@@ -36,7 +36,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="img/logo-grey-bg-180x180px.png">
 
 	<!-- Windows 8/10 - Edge tiles -->
-	<meta name="application-name" content="The Lounge">
+	<meta name="application-name" content="Hard Lounge">
 	<meta name="msapplication-TileColor" content="<%- themeColor %>">
 	<meta name="msapplication-square70x70logo" content="img/logo-grey-bg-120x120px.png">
 	<meta name="msapplication-square150x150logo" content="img/logo-grey-bg-152x152px.png">
@@ -54,7 +54,7 @@
 				<div id="loading-status-container">
 					<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="" width="256" height="170">
 					<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="" width="256" height="170">
-					<p id="loading-page-message">The Lounge requires a modern browser with JavaScript enabled.</p>
+					<p id="loading-page-message">Hard Lounge requires a modern browser with JavaScript enabled.</p>
 				</div>
 				<div id="loading-reload-container">
 					<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>

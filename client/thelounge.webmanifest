@@ -1,6 +1,6 @@
 {
-	"name": "The Lounge",
-	"short_name": "The Lounge",
+	"name": "Hard Lounge",
+	"short_name": "Hard Lounge",
 	"description": "Self-hosted web IRC client",
 	"start_url": ".",
 	"display": "standalone",

@@ -1,16 +1,16 @@
 {
-  "name": "@supernets/thelounge",
+  "name": "@supernets/hardlounge",
   "description": "The self-hosted Web IRC client",
   "version": "4.4.1",
   "preferGlobal": true,
   "bin": {
-    "thelounge": "index.js"
+    "hardlounge": "index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.supernets.org/supernets/thelounge"
+    "url": "https://git.supernets.org/supernets/hardlounge"
   },
-  "homepage": "https://git.supernets.org/supernets/thelounge",
+  "homepage": "https://git.supernets.org/supernets/hardlounge",
   "scripts": {
     "build:client": "webpack",
     "build:server": "tsc -p server/tsconfig.json",

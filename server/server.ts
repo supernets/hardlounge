@@ -71,7 +71,7 @@ export default async function (
 		dev: false,
 	}
 ) {
-	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
+	log.info(`Hard Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
 	})`);
@@ -678,7 +678,7 @@ function initializeClient(
 				client.manager.webPush.pushSingle(client, registration, {
 					type: "notification",
 					timestamp: Date.now(),
-					title: "The Lounge",
+					title: "Hard Lounge",
 					body: "🚀 Push notifications have been enabled",
 				});
 			}

@@ -133,7 +133,7 @@ function loadPackage(packageName: string) {
 				includePrerelease: true, // our pre-releases should respect the semver guarantees
 			})
 		) {
-			throw `v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`;
+			throw `v${packageInfo.version} does not support this version of Hard Lounge. Supports: ${packageInfo.thelounge.supports}`;
 		}
 
 		packageFile = require(packagePath);
@@ -176,7 +176,7 @@ function loadPackage(packageName: string) {
 
 		log.info(
 			"There are packages using the experimental plugin API. " +
-				"Be aware that this API is not yet stable and may change in future The Lounge releases."
+				"Be aware that this API is not yet stable and may change in future Hard Lounge releases."
 		);
 	}
 }

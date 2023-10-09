@@ -155,8 +155,8 @@ class Uploader {
 
 		// Tell the server that we are still upload to this token
 		// so it does not become invalidated and fail the upload.
-		// This issue only happens if The Lounge is proxied through other software
-		// as it may buffer the upload before the upload request will be processed by The Lounge.
+		// This issue only happens if Hard Lounge is proxied through other software
+		// as it may buffer the upload before the upload request will be processed by Hard Lounge.
 		this.tokenKeepAlive = setInterval(() => socket.emit("upload:ping", token), 40 * 1000);
 
 		if (

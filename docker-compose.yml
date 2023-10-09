@@ -1,8 +1,8 @@
 services:
-  thelounge:
-    image: git.supernets.org/supernets/thelounge:latest
+  hardlounge:
+    image: git.supernets.org/supernets/hardlounge:latest
     #build: .
     ports:
       - "9000:9000"
     volumes:
-      - "$PWD/config:/var/opt/thelounge"
+      - "$PWD/config:/var/opt/hardlounge"

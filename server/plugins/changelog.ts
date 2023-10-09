@@ -127,7 +127,7 @@ function checkForUpdates(manager: ClientManager) {
 			}
 
 			log.info(
-				`The Lounge ${colors.green(
+				`Hard Lounge ${colors.green(
 					versionData.latest.version
 				)} is available. Read more on GitHub: ${versionData.latest.url}`
 			);

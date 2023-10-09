@@ -83,7 +83,7 @@ function loadFromLocalStorage() {
 		return {};
 	}
 
-	// Older The Lounge versions converted highlights to an array, turn it back into a string
+	// Older Hard Lounge versions converted highlights to an array, turn it back into a string
 	if (storedSettings.highlights !== null && typeof storedSettings.highlights === "object") {
 		storedSettings.highlights = storedSettings.highlights.join(", ");
 	}

@@ -54,7 +54,7 @@ describe("Server", function () {
 		it("should run a web server on " + webURL, async () => {
 			const response = await got(webURL);
 			expect(response.statusCode).to.equal(200);
-			expect(response.body).to.include("<title>The Lounge</title>");
+			expect(response.body).to.include("<title>Hard Lounge</title>");
 			expect(response.body).to.include("js/bundle.js");
 		});
 
@@ -63,7 +63,7 @@ describe("Server", function () {
 			const body = JSON.parse(response.body);
 
 			expect(response.statusCode).to.equal(200);
-			expect(body.name).to.equal("The Lounge");
+			expect(body.name).to.equal("Hard Lounge");
 			expect(response.headers["content-type"]).to.equal("application/manifest+json");
 		});
 	});
@@ -100,7 +100,7 @@ describe("Server", function () {
 			client.on("init", () => {
 				client.emit("network:new", {
 					username: "test-user",
-					realname: "The Lounge Test",
+					realname: "Hard Lounge Test",
 					nick: "test-user",
 					join: "#thelounge, #spam",
 					name: "Test Network",

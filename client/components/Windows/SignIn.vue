@@ -4,14 +4,14 @@
 			<img
 				src="img/logo-vertical-transparent-bg.svg"
 				class="logo"
-				alt="The Lounge"
+				alt="Hard Lounge"
 				width="256"
 				height="170"
 			/>
 			<img
 				src="img/logo-vertical-transparent-bg-inverted.svg"
 				class="logo-inverted"
-				alt="The Lounge"
+				alt="Hard Lounge"
 				width="256"
 				height="170"
 			/>

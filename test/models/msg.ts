@@ -39,8 +39,8 @@ describe("Msg", function () {
 				},
 				{
 					body: "",
-					head: "The Lounge",
-					link: "https://thelounge.chat/",
+					head: "Hard Lounge",
+					link: "https://git.supernets.org/supernets/hardlounge",
 					thumb: "",
 					type: "link",
 					shown: true,
@@ -49,11 +49,14 @@ describe("Msg", function () {
 		});
 
 		it("should find a preview given an existing link", function () {
-			expect(msg.findPreview("https://thelounge.chat/")?.head).to.equal("The Lounge");
+			expect(
+				msg.findPreview("https://git.supernets.org/supernets/hardlounge/")?.head
+			).to.equal("Hard Lounge");
 		});
 
 		it("should not find a preview that does not exist", function () {
-			expect(msg.findPreview("https://github.com/thelounge/thelounge")).to.be.undefined;
+			expect(msg.findPreview("https://git.supernets.org/supernets/hardlounge")).to.be
+				.undefined;
 		});
 	});
 });

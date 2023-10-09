@@ -7,7 +7,7 @@
 			<h1 class="title">Help</h1>
 
 			<h2 class="help-version-title">
-				<span>About The Lounge: Hard Chats Edition</span>
+				<span>About Hard Lounge</span>
 				<small>
 					v{{ store.state.serverConfiguration?.version }} (<router-link
 						id="view-changelog"
@@ -21,7 +21,7 @@
 				<VersionChecker />
 				<p>
 					<a
-						href="https://git.supernets.org/supernets/thelounge/"
+						href="https://git.supernets.org/supernets/hardlounge/"
 						target="_blank"
 						rel="noopener"
 						class="website-link"
@@ -39,7 +39,7 @@
 				</p>
 				<p>
 					<a
-						href="https://git.supernets.org/supernets/thelounge/issues/new"
+						href="https://git.supernets.org/supernets/hardlounge/issues/new"
 						target="_blank"
 						rel="noopener"
 						class="report-issue-link"
@@ -592,7 +592,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Send an action message to the current channel. The Lounge will display it
+						Send an action message to the current channel. Hard Lounge will display it
 						inline, as if the message was posted in the third person.
 					</p>
 				</div>

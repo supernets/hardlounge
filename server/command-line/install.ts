@@ -67,7 +67,7 @@ program
 				const humanVersion = isLocalFile ? packageName : `${json.name} v${json.version}`;
 
 				if (!("thelounge" in json)) {
-					log.error(`${colors.red(humanVersion)} does not have The Lounge metadata.`);
+					log.error(`${colors.red(humanVersion)} does not have Hard Lounge metadata.`);
 
 					process.exit(1);
 				}
@@ -81,7 +81,7 @@ program
 					log.error(
 						`${colors.red(
 							humanVersion
-						)} does not support The Lounge v${Helper.getVersionNumber()}. Supported version(s): ${
+						)} does not support Hard Lounge v${Helper.getVersionNumber()}. Supported version(s): ${
 							json.thelounge.supports
 						}`
 					);

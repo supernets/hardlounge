@@ -16,7 +16,7 @@
 				/>
 				<span
 					v-if="isDevelopment"
-					title="The Lounge has been built in development mode"
+					title="Hard Lounge has been built in development mode"
 					:style="{
 						backgroundColor: '#ff9e18',
 						color: '#000',

@@ -56,7 +56,7 @@ describe("packages", function () {
 			packages.loadPackages();
 
 			expect(stdout).to.deep.equal(
-				"Package thelounge-package-foo vdummy loaded\nThere are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases.\n"
+				"Package thelounge-package-foo vdummy loaded\nThere are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future Hard Lounge releases.\n"
 			);
 		});
 	});
