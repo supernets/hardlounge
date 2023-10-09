@@ -16,3 +16,6 @@ LICENSE
 README.md
 README.old
 SECURITY.md
+docker-compose.yml
+package-lock.json
+yarn.lock
