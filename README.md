@@ -1,4 +1,4 @@
-# The Lounge: Hard Chats Edition
+# Hard Lounge
 
 This is a fork of The Lounge intended to be used for the SuperNETs Webchat (located at https://webchat.supernets.org)
 
@@ -16,4 +16,4 @@ If for some reason you decide to run our version of this container, we are more 
 
 # Credits
 
-- All developers & contributors of The Lounge - https://github.com/thelounge/thelounge
+- Some of the developers & contributors of The Lounge, some of you however should never ever touch a code editor again. - https://github.com/thelounge/thelounge
