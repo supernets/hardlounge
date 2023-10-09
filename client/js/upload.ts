@@ -15,7 +15,7 @@ class Uploader {
 	onDragOver = (e: DragEvent) => this.dragOver(e);
 	onDragLeave = (e: DragEvent) => this.dragLeave(e);
 	onDrop = (e: DragEvent) => this.drop(e);
-	onPaste = (e: ClipboardEvent) => this.paste(e);
+	//onPaste = (e: ClipboardEvent) => this.paste(e);
 
 	init() {
 		socket.on("upload:auth", (token) => this.uploadNextFileInQueue(token));
@@ -29,7 +29,7 @@ class Uploader {
 		document.addEventListener("dragover", this.onDragOver);
 		document.addEventListener("dragleave", this.onDragLeave);
 		document.addEventListener("drop", this.onDrop);
-		document.addEventListener("paste", this.onPaste);
+		//document.addEventListener("paste", this.onPaste);
 	}
 
 	unmounted() {
@@ -37,7 +37,7 @@ class Uploader {
 		document.removeEventListener("dragover", this.onDragOver);
 		document.removeEventListener("dragleave", this.onDragLeave);
 		document.removeEventListener("drop", this.onDrop);
-		document.removeEventListener("paste", this.onPaste);
+		//document.removeEventListener("paste", this.onPaste);
 	}
 
 	dragOver(event: DragEvent) {
@@ -67,24 +67,9 @@ class Uploader {
 	}
 
 	drop(event: DragEvent) {
-		if (!event.dataTransfer?.types.includes("Files")) {
-			return;
-		}
-
 		event.preventDefault();
 		this.overlay?.classList.remove("is-dragover");
-
-		let files: (File | null)[];
-
-		if (event.dataTransfer.items) {
-			files = Array.from(event.dataTransfer.items)
-				.filter((item) => item.kind === "file")
-				.map((item) => item.getAsFile());
-		} else {
-			files = Array.from(event.dataTransfer.files);
-		}
-
-		this.triggerUpload(files);
+		//this.triggerUpload(files);
 	}
 
 	paste(event: ClipboardEvent) {
@@ -138,7 +123,7 @@ class Uploader {
 				continue;
 			}
 
-			this.fileQueue.push(file);
+			//this.fileQueue.push(file);
 		}
 
 		// if the queue was empty and we added some files to it, and there currently
@@ -259,10 +244,10 @@ class Uploader {
 			}
 		};
 
-		const formData = new FormData();
-		formData.append("file", file);
-		this.xhr.open("POST", `uploads/new/${token}`);
-		this.xhr.send(formData);
+		//const formData = new FormData();
+		//formData.append("file", file);
+		//this.xhr.open("POST", `uploads/new/${token}`);
+		//this.xhr.send(formData);
 	}
 
 	handleResponse(response: {error?: string; url?: string}) {

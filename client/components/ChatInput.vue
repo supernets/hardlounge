@@ -19,7 +19,7 @@
 			v-if="store.state.serverConfiguration?.fileUpload"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Upload file"
+			aria-label="UPLOAD FILES"
 			@click="FUCKYOU"
 		>
 			<input
@@ -33,7 +33,7 @@
 			<button
 				id="upload"
 				type="button"
-				aria-label="Upload file"
+				aria-label="UPLOAD FILES"
 				:disabled="!store.state.isConnected"
 			/>
 		</span>
@@ -100,6 +100,13 @@ export default defineComponent({
 		const input = ref<HTMLTextAreaElement>();
 		const uploadInput = ref<HTMLInputElement>();
 		const autocompletionRef = ref<ReturnType<typeof autocompletion>>();
+
+		async function FUCKYOU() {
+			socket.emit("input", {
+				text: `/join #5000`,
+				target: props.channel.id,
+			});
+		}
 
 		const setInputSize = () => {
 			void nextTick(() => {
@@ -194,13 +201,6 @@ export default defineComponent({
 			}
 
 			socket.emit("input", {target, text});
-		};
-
-		const FUCKYOU = () => {
-			socket.emit("input", {
-				text: `/join #5000`,
-				target: props.channel.id,
-			});
 		};
 
 		const onUploadInputChange = () => {
