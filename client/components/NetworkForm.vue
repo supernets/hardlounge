@@ -251,7 +251,7 @@
 					autocomplete="off"
 					class="input"
 					name="leaveMessage"
-					placeholder="Hard Lounge - https://thelounge.chat"
+					placeholder="Hard Lounge - https://git.supernets.org/supernets/hardlounge"
 				/>
 			</div>
 			<template v-if="defaults.uuid && !store.state.serverConfiguration?.public">
