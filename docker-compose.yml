@@ -1,7 +1,7 @@
 services:
   hardlounge:
-    #image: git.supernets.org/supernets/hardlounge:latest
-    build: .
+    image: git.supernets.org/supernets/hardlounge:latest
+    #build: .
     ports:
       - "9000:9000"
     volumes:
