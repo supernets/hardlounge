@@ -1,13 +1,17 @@
-import type {Database} from "sqlite3";
+import type { Database } from "sqlite3";
 
 import log from "../../log";
 import path from "path";
 import fs from "fs/promises";
 import Config from "../../config";
-import Msg, {Message} from "../../models/msg";
-import Chan, {Channel} from "../../models/chan";
+import Msg, { Message } from "../../models/msg";
+import Chan, { Channel } from "../../models/chan";
 import Helper from "../../helper";
-import type {SearchResponse, SearchQuery, SearchableMessageStorage} from "./types";
+import type {
+	SearchResponse,
+	SearchQuery,
+	SearchableMessageStorage,
+} from "./types";
 import Network from "../../models/network";
 
 // TODO; type
@@ -16,15 +20,21 @@ let sqlite3: any;
 try {
 	sqlite3 = require("sqlite3");
 } catch (e: any) {
-	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
+	Config.values.messageStorage = Config.values.messageStorage.filter(
+		(item) => item !== "sqlite"
+	);
 
 	log.error(
 		"Unable to load sqlite3 module. See https://github.com/mapbox/node-sqlite3/wiki/Binaries"
 	);
 }
 
-type Migration = {version: number; stmts: string[]};
-type Rollback = {version: number; rollback_forbidden?: boolean; stmts: string[]};
+type Migration = { version: number; stmts: string[] };
+type Rollback = {
+	version: number;
+	rollback_forbidden?: boolean;
+	stmts: string[];
+};
 
 export const currentSchemaVersion = 1679743888000; // use `new Date().getTime()`
 
@@ -121,7 +131,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const sqlitePath = path.join(logsPath, `${this.userName}.sqlite3`);
 
 		try {
-			await fs.mkdir(logsPath, {recursive: true});
+			await fs.mkdir(logsPath, { recursive: true });
 		} catch (e) {
 			throw Helper.catch_to_error("Unable to create logs directory", e);
 		}
@@ -152,9 +162,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			await this.serialize_run(stmt, []);
 		}
 
-		await this.serialize_run("INSERT INTO options (name, value) VALUES ('schema_version', ?)", [
-			currentSchemaVersion.toString(),
-		]);
+		await this.serialize_run(
+			"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
+			[currentSchemaVersion.toString()]
+		);
 	}
 
 	async current_version(): Promise<number> {
@@ -181,9 +192,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	async update_version_in_db() {
-		return this.serialize_run("UPDATE options SET value = ? WHERE name = 'schema_version'", [
-			currentSchemaVersion.toString(),
-		]);
+		return this.serialize_run(
+			"UPDATE options SET value = ? WHERE name = 'schema_version'",
+			[currentSchemaVersion.toString()]
+		);
 	}
 
 	async _run_migrations(dbVersion: number) {
@@ -274,7 +286,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 					stmts: [raw.statement],
 				});
 			} else {
-				last.stmts.push(raw.statment);
+				last.stmts.push(raw.statement);
 			}
 		}
 
@@ -282,7 +294,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	async delete_migrations_older_than(version: number) {
-		return this.serialize_run("delete from migrations where migrations.version > ?", [version]);
+		return this.serialize_run(
+			"delete from migrations where migrations.version > ?",
+			[version]
+		);
 	}
 
 	async _downgrade_to(version: number) {
@@ -307,7 +322,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		await this.delete_migrations_older_than(version);
 		await this.update_version_in_db();
 
-		return _rollbacks.at(-1)!.version; // assert valid due to length guard above
+		return version;
 	}
 
 	async downgrade_to(version: number) {
@@ -372,7 +387,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			// id is regenerated when messages are retrieved
 			// previews are not stored because storage is cleared on lounge restart
 			// type and time are stored in a separate column
-			if (prop !== "id" && prop !== "previews" && prop !== "type" && prop !== "time") {
+			if (
+				prop !== "id" &&
+				prop !== "previews" &&
+				prop !== "type" &&
+				prop !== "time"
+			) {
 				newMsg[prop] = msg[prop];
 			}
 
@@ -398,10 +418,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			return;
 		}
 
-		await this.serialize_run("DELETE FROM messages WHERE network = ? AND channel = ?", [
-			network.uuid,
-			channel.name.toLowerCase(),
-		]);
+		await this.serialize_run(
+			"DELETE FROM messages WHERE network = ? AND channel = ?",
+			[network.uuid, channel.name.toLowerCase()]
+		);
 	}
 
 	async getMessages(
@@ -416,7 +436,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		// If unlimited history is specified, load 100k messages
-		const limit = Config.values.maxHistory < 0 ? 100000 : Config.values.maxHistory;
+		const limit =
+			Config.values.maxHistory < 0 ? 100000 : Config.values.maxHistory;
 
 		const rows = await this.serialize_fetchall(
 			"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",

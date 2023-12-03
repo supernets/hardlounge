@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import fs from "fs";
 import path from "path";
-import {expect} from "chai";
+import { expect } from "chai";
 import util from "../util";
-import Msg, {MessageType} from "../../server/models/msg";
+import Msg, { MessageType } from "../../server/models/msg";
 import Config from "../../server/config";
 import MessageStorage, {
 	currentSchemaVersion,
@@ -111,7 +111,7 @@ describe("SQLite migrations", function () {
 	it("has working down-migrations", async function () {
 		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
 
-		for (const rollback of rollbacks.reverse()) {
+		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
 				throw Error(
 					"Try to write a down migration, if you really can't, flip this to a break"
@@ -132,7 +132,11 @@ describe("SQLite Message Storage", function () {
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 	this.slow(300);
 
-	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
+	const expectedPath = path.join(
+		Config.getHomePath(),
+		"logs",
+		"testUser.sqlite3"
+	);
 	let store: MessageStorage;
 
 	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
@@ -193,13 +197,19 @@ describe("SQLite Message Storage", function () {
 
 	it("should resolve an empty array when disabled", async function () {
 		store.isEnabled = false;
-		const messages = await store.getMessages(null as any, null as any, null as any);
+		const messages = await store.getMessages(
+			null as any,
+			null as any,
+			null as any
+		);
 		expect(messages).to.be.empty;
 		store.isEnabled = true;
 	});
 
 	it("should insert schema version to options table", async function () {
-		const row = await db_get_one("SELECT value FROM options WHERE name = 'schema_version'");
+		const row = await db_get_one(
+			"SELECT value FROM options WHERE name = 'schema_version'"
+		);
 		expect(row.value).to.equal(currentSchemaVersion.toString());
 	});
 
@@ -252,8 +262,8 @@ describe("SQLite Message Storage", function () {
 
 			for (let i = 0; i < 200; ++i) {
 				await store.index(
-					{uuid: "retrieval-order-test-network"} as any,
-					{name: "#channel"} as any,
+					{ uuid: "retrieval-order-test-network" } as any,
+					{ name: "#channel" } as any,
 					new Msg({
 						time: 123456789 + i,
 						text: `msg ${i}`,
@@ -263,12 +273,15 @@ describe("SQLite Message Storage", function () {
 
 			let msgId = 0;
 			const messages = await store.getMessages(
-				{uuid: "retrieval-order-test-network"} as any,
-				{name: "#channel"} as any,
+				{ uuid: "retrieval-order-test-network" } as any,
+				{ name: "#channel" } as any,
 				() => msgId++
 			);
 			expect(messages).to.have.lengthOf(2);
-			expect(messages.map((i_1) => i_1.text)).to.deep.equal(["msg 198", "msg 199"]);
+			expect(messages.map((i_1) => i_1.text)).to.deep.equal([
+				"msg 198",
+				"msg 199",
+			]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
@@ -293,7 +306,9 @@ describe("SQLite Message Storage", function () {
 				expectedMessages.push(`msg ${i}`);
 			}
 
-			expect(search.results.map((i_1) => i_1.text)).to.deep.equal(expectedMessages);
+			expect(search.results.map((i_1) => i_1.text)).to.deep.equal(
+				expectedMessages
+			);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
@@ -316,8 +331,8 @@ describe("SQLite Message Storage", function () {
 			Config.values.maxHistory = 3;
 
 			await store.index(
-				{uuid: "this-is-a-network-guid2"} as any,
-				{name: "#channel"} as any,
+				{ uuid: "this-is-a-network-guid2" } as any,
+				{ name: "#channel" } as any,
 				new Msg({
 					time: 123456790,
 					text: `foo % bar _ baz`,
@@ -325,8 +340,8 @@ describe("SQLite Message Storage", function () {
 			);
 
 			await store.index(
-				{uuid: "this-is-a-network-guid2"} as any,
-				{name: "#channel"} as any,
+				{ uuid: "this-is-a-network-guid2" } as any,
+				{ name: "#channel" } as any,
 				new Msg({
 					time: 123456791,
 					text: `foo bar x baz`,
@@ -334,8 +349,8 @@ describe("SQLite Message Storage", function () {
 			);
 
 			await store.index(
-				{uuid: "this-is-a-network-guid2"} as any,
-				{name: "#channel"} as any,
+				{ uuid: "this-is-a-network-guid2" } as any,
+				{ name: "#channel" } as any,
 				new Msg({
 					time: 123456792,
 					text: `bar @ baz`,
@@ -356,7 +371,7 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should be able to downgrade", async function () {
-		for (const rollback of rollbacks.reverse()) {
+		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
 				throw Error(
 					"Try to write a down migration, if you really can't, flip this to a break"

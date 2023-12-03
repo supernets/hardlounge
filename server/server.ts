@@ -1,9 +1,9 @@
 import _ from "lodash";
-import {Server as wsServer} from "ws";
-import express, {NextFunction, Request, Response} from "express";
+import { Server as wsServer } from "ws";
+import express, { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import path from "path";
-import {Server, Socket} from "socket.io";
+import { Server, Socket } from "socket.io";
 import dns from "dns";
 import colors from "chalk";
 import net from "net";
@@ -13,18 +13,18 @@ import Client from "./client";
 import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
-import Config, {ConfigType, Defaults} from "./config";
+import Config, { ConfigType, Defaults } from "./config";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
 
-import themes, {ThemeForClient} from "./plugins/packages/themes";
+import themes, { ThemeForClient } from "./plugins/packages/themes";
 themes.loadLocalThemes();
 
 import packages from "./plugins/packages/index";
-import {NetworkWithIrcFramework} from "./models/network";
-import {ChanType} from "./models/chan";
+import { NetworkWithIrcFramework } from "./models/network";
+import { ChanType } from "./models/chan";
 import Utils from "./command-line/utils";
 import type {
 	ClientToServerEvents,
@@ -72,9 +72,9 @@ export default async function (
 	}
 ) {
 	log.info(`Hard Lounge ${colors.green(Helper.getVersion())} \
-(Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
-		process.arch
-	})`);
+(Node.js ${colors.green(process.versions.node)} on ${colors.green(
+		process.platform
+	)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Config.getConfigPath())}`);
 
 	const staticOptions = {
@@ -96,8 +96,16 @@ export default async function (
 		.get("/service-worker.js", forceNoCacheRequest)
 		.get("/js/bundle.js.map", forceNoCacheRequest)
 		.get("/css/style.css.map", forceNoCacheRequest)
-		.use(express.static(Utils.getFileFromRelativeToRoot("public"), staticOptions))
-		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
+		.use(
+			express.static(
+				Utils.getFileFromRelativeToRoot("public"),
+				staticOptions
+			)
+		)
+		.use(
+			"/storage/",
+			express.static(Config.getStoragePath(), staticOptions)
+		);
 
 	if (Config.values.fileUpload.enable) {
 		Uploader.router(app);
@@ -123,7 +131,10 @@ export default async function (
 		const fileName = req.params.filename;
 		const packageFile = packages.getPackage(packageName);
 
-		if (!packageFile || !packages.getFiles().includes(`${packageName}/${fileName}`)) {
+		if (
+			!packageFile ||
+			!packages.getFiles().includes(`${packageName}/${fileName}`)
+		) {
 			return res.status(404).send("Not found");
 		}
 
@@ -180,7 +191,10 @@ export default async function (
 				host: string | undefined;
 		  };
 
-	if (typeof Config.values.host === "string" && Config.values.host.startsWith("unix:")) {
+	if (
+		typeof Config.values.host === "string" &&
+		Config.values.host.startsWith("unix:")
+	) {
 		listenParams = Config.values.host.replace(/^unix:/, "");
 	} else {
 		listenParams = {
@@ -208,8 +222,12 @@ export default async function (
 
 				log.info(
 					"Available at " +
-						colors.green(`${protocol}://${address.address}:${address.port}/`) +
-						` in ${colors.bold(Config.values.public ? "public" : "private")} mode`
+						colors.green(
+							`${protocol}://${address.address}:${address.port}/`
+						) +
+						` in ${colors.bold(
+							Config.values.public ? "public" : "private"
+						)} mode`
 				);
 			}
 		}
@@ -267,7 +285,9 @@ export default async function (
 				log.error(`Could not start identd server, ${err.message}`);
 				process.exit(1);
 			} else if (!manager) {
-				log.error("Could not start identd server, ClientManager is undefined");
+				log.error(
+					"Could not start identd server, ClientManager is undefined"
+				);
 				process.exit(1);
 			}
 
@@ -290,7 +310,9 @@ export default async function (
 			}
 
 			if (Config.values.prefetchStorage) {
-				log.info("Clearing prefetch storage folder, this might take a while...");
+				log.info(
+					"Clearing prefetch storage folder, this might take a while..."
+				);
 
 				(await import("./plugins/storage")).default.emptyDir();
 			}
@@ -316,7 +338,7 @@ export default async function (
 		// Clear storage folder after server starts successfully
 		if (Config.values.prefetchStorage) {
 			import("./plugins/storage")
-				.then(({default: storage}) => {
+				.then(({ default: storage }) => {
 					storage.emptyDir();
 				})
 				.catch((err: Error) => {
@@ -333,7 +355,10 @@ export default async function (
 function getClientLanguage(socket: Socket): string | null {
 	const acceptLanguage = socket.handshake.headers["accept-language"];
 
-	if (typeof acceptLanguage === "string" && /^[\x00-\x7F]{1,50}$/.test(acceptLanguage)) {
+	if (
+		typeof acceptLanguage === "string" &&
+		/^[\x00-\x7F]{1,50}$/.test(acceptLanguage)
+	) {
 		// only allow ASCII strings between 1-50 characters in length
 		return acceptLanguage;
 	}
@@ -360,7 +385,10 @@ function getClientIp(socket: Socket) {
 function getClientSecure(socket: Socket) {
 	let secure = socket.handshake.secure;
 
-	if (Config.values.reverseProxy && socket.handshake.headers["x-forwarded-proto"] === "https") {
+	if (
+		Config.values.reverseProxy &&
+		socket.handshake.headers["x-forwarded-proto"] === "https"
+	) {
 		secure = true;
 	}
 
@@ -390,7 +418,9 @@ function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
 	// - https://user-images.githubusercontent.com is where we currently push our changelog screenshots
 	// - data: is required for the HTML5 video player
 	if (Config.values.prefetchStorage || !Config.values.prefetch) {
-		policies.push("img-src 'self' data: https://user-images.githubusercontent.com");
+		policies.push(
+			"img-src 'self' data: https://user-images.githubusercontent.com"
+		);
 		policies.unshift("block-all-mixed-content");
 	} else {
 		policies.push("img-src http: https: data:");
@@ -422,7 +452,7 @@ function indexRequest(req: Request, res: Response) {
 
 			const config: IndexTemplateConfiguration = {
 				...getServerConfiguration(),
-				...{cacheBust: Helper.getVersionCacheBust()},
+				...{ cacheBust: Helper.getVersionCacheBust() },
 			};
 
 			res.send(_.template(file)(config));
@@ -449,7 +479,9 @@ function initializeClient(
 
 		// If client provided channel passes checks, use it. if client has invalid
 		// channel open (or windows like settings) then use last known server active channel
-		openChannel = client.attachedClients[socket.id].openChannel || client.lastActiveChannel;
+		openChannel =
+			client.attachedClients[socket.id].openChannel ||
+			client.lastActiveChannel;
 	} else {
 		openChannel = client.lastActiveChannel;
 	}
@@ -494,7 +526,7 @@ function initializeClient(
 			return;
 		}
 
-		const network = _.find(client.networks, {uuid: data});
+		const network = _.find(client.networks, { uuid: data });
 
 		if (!network) {
 			return;
@@ -508,7 +540,7 @@ function initializeClient(
 			return;
 		}
 
-		const network = _.find(client.networks, {uuid: data.uuid});
+		const network = _.find(client.networks, { uuid: data.uuid });
 
 		if (!network) {
 			return;
@@ -552,7 +584,10 @@ function initializeClient(
 						const hash = Helper.password.hash(p1);
 
 						client.setPassword(hash, (success: boolean) => {
-							const obj = {success: false, error: undefined} as {
+							const obj = {
+								success: false,
+								error: undefined,
+							} as {
 								success: boolean;
 								error: string | undefined;
 							};
@@ -567,7 +602,9 @@ function initializeClient(
 						});
 					})
 					.catch((error: Error) => {
-						log.error(`Error while checking users password. Error: ${error.message}`);
+						log.error(
+							`Error while checking users password. Error: ${error.message}`
+						);
 					});
 			}
 		});
@@ -596,7 +633,9 @@ function initializeClient(
 				socket.emit("changelog", changelogData);
 			})
 			.catch((error: Error) => {
-				log.error(`Error while fetching changelog. Error: ${error.message}`);
+				log.error(
+					`Error while fetching changelog. Error: ${error.message}`
+				);
 			});
 	});
 
@@ -665,7 +704,12 @@ function initializeClient(
 
 	if (!Config.values.public) {
 		socket.on("push:register", (subscription) => {
-			if (!Object.prototype.hasOwnProperty.call(client.config.sessions, token)) {
+			if (
+				!Object.prototype.hasOwnProperty.call(
+					client.config.sessions,
+					token
+				)
+			) {
 				return;
 			}
 
@@ -684,26 +728,32 @@ function initializeClient(
 			}
 		});
 
-		socket.on("push:unregister", () => client.unregisterPushSubscription(token));
+		socket.on("push:unregister", () =>
+			client.unregisterPushSubscription(token)
+		);
 	}
 
 	const sendSessionList = () => {
 		// TODO: this should use the ClientSession type currently in client
-		const sessions = _.map(client.config.sessions, (session, sessionToken) => {
-			return {
-				current: sessionToken === token,
-				active: _.reduce(
-					client.attachedClients,
-					(count, attachedClient) =>
-						count + (attachedClient.token === sessionToken ? 1 : 0),
-					0
-				),
-				lastUse: session.lastUse,
-				ip: session.ip,
-				agent: session.agent,
-				token: sessionToken, // TODO: Ideally don't expose actual tokens to the client
-			};
-		});
+		const sessions = _.map(
+			client.config.sessions,
+			(session, sessionToken) => {
+				return {
+					current: sessionToken === token,
+					active: _.reduce(
+						client.attachedClients,
+						(count, attachedClient) =>
+							count +
+							(attachedClient.token === sessionToken ? 1 : 0),
+						0
+					),
+					lastUse: session.lastUse,
+					ip: session.ip,
+					agent: session.agent,
+					token: sessionToken, // TODO: Ideally don't expose actual tokens to the client
+				};
+			}
+		);
 
 		socket.emit("sessions:list", sessions);
 	};
@@ -725,8 +775,12 @@ function initializeClient(
 			}
 
 			// We do not need to do write operations and emit events if nothing changed.
-			if (client.config.clientSettings[newSetting.name] !== newSetting.value) {
-				client.config.clientSettings[newSetting.name] = newSetting.value;
+			if (
+				client.config.clientSettings[newSetting.name] !==
+				newSetting.value
+			) {
+				client.config.clientSettings[newSetting.name] =
+					newSetting.value;
 
 				// Pass the setting to all clients.
 				client.emit("setting:new", {
@@ -736,7 +790,10 @@ function initializeClient(
 
 				client.save();
 
-				if (newSetting.name === "highlights" || newSetting.name === "highlightExceptions") {
+				if (
+					newSetting.name === "highlights" ||
+					newSetting.name === "highlightExceptions"
+				) {
 					client.compileCustomHighlights();
 				} else if (newSetting.name === "awayMessage") {
 					if (typeof newSetting.value !== "string") {
@@ -749,7 +806,12 @@ function initializeClient(
 		});
 
 		socket.on("setting:get", () => {
-			if (!Object.prototype.hasOwnProperty.call(client.config, "clientSettings")) {
+			if (
+				!Object.prototype.hasOwnProperty.call(
+					client.config,
+					"clientSettings"
+				)
+			) {
 				socket.emit("setting:all", {});
 				return;
 			}
@@ -763,14 +825,14 @@ function initializeClient(
 			socket.emit("search:results", results);
 		});
 
-		socket.on("mute:change", ({target, setMutedTo}) => {
+		socket.on("mute:change", ({ target, setMutedTo }) => {
 			const networkAndChan = client.find(target);
 
 			if (!networkAndChan) {
 				return;
 			}
 
-			const {chan, network} = networkAndChan;
+			const { chan, network } = networkAndChan;
 
 			// If the user mutes the lobby, we mute the entire network.
 			if (chan.type === ChanType.LOBBY) {
@@ -802,7 +864,12 @@ function initializeClient(
 			tokenToSignOut = token;
 		}
 
-		if (!Object.prototype.hasOwnProperty.call(client.config.sessions, tokenToSignOut)) {
+		if (
+			!Object.prototype.hasOwnProperty.call(
+				client.config.sessions,
+				tokenToSignOut
+			)
+		) {
 			return;
 		}
 
@@ -815,7 +882,9 @@ function initializeClient(
 				return;
 			}
 
-			const socketToRemove = manager!.sockets.of("/").sockets.get(socketId);
+			const socketToRemove = manager!.sockets
+				.of("/")
+				.sockets.get(socketId);
 
 			socketToRemove!.emit("sign-out");
 			socketToRemove!.disconnect();
@@ -901,7 +970,7 @@ function getClientConfiguration(): ClientConfiguration {
 }
 
 function getServerConfiguration(): ServerConfiguration {
-	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
+	return { ...Config.values, ...{ stylesheets: packages.getStylesheets() } };
 }
 
 function performAuthentication(this: Socket, data) {
@@ -914,7 +983,13 @@ function performAuthentication(this: Socket, data) {
 	let token: string;
 
 	const finalInit = () =>
-		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);
+		initializeClient(
+			socket,
+			client,
+			token,
+			data.lastMessage || -1,
+			data.openChannel
+		);
 
 	const initClient = () => {
 		// Configuration does not change during runtime of TL,
@@ -924,7 +999,9 @@ function performAuthentication(this: Socket, data) {
 
 			socket.emit(
 				"push:issubscribed",
-				token && client.config.sessions[token].pushSubscription ? true : false
+				token && client.config.sessions[token].pushSubscription
+					? true
+					: false
 			);
 		}
 
@@ -976,9 +1053,9 @@ function performAuthentication(this: Socket, data) {
 				);
 			} else {
 				log.warn(
-					`Authentication failed for user ${colors.bold(data.user)} from ${colors.bold(
-						getClientIp(socket)
-					)}`
+					`Authentication failed for user ${colors.bold(
+						data.user
+					)} from ${colors.bold(getClientIp(socket))}`
 				);
 			}
 
@@ -1001,7 +1078,12 @@ function performAuthentication(this: Socket, data) {
 	if (client && data.token) {
 		const providedToken = client.calculateTokenHash(data.token);
 
-		if (Object.prototype.hasOwnProperty.call(client.config.sessions, providedToken)) {
+		if (
+			Object.prototype.hasOwnProperty.call(
+				client.config.sessions,
+				providedToken
+			)
+		) {
 			token = providedToken;
 
 			return authCallback(true);
@@ -1015,28 +1097,43 @@ function performAuthentication(this: Socket, data) {
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
-	dns.reverse(ip, (reverseErr, hostnames) => {
-		if (reverseErr || hostnames.length < 1) {
-			return callback(ip);
-		}
-
-		dns.resolve(hostnames[0], net.isIP(ip) === 6 ? "AAAA" : "A", (resolveErr, resolvedIps) => {
-			// TODO: investigate SoaRecord class
-			if (!Array.isArray(resolvedIps)) {
+	// node can throw, even if we provide valid input based on the DNS server
+	// returning SERVFAIL it seems: https://github.com/thelounge/thelounge/issues/4768
+	// so we manually resolve with the ip as a fallback in case something fails
+	try {
+		dns.reverse(ip, (reverseErr, hostnames) => {
+			if (reverseErr || hostnames.length < 1) {
 				return callback(ip);
 			}
 
-			if (resolveErr || resolvedIps.length < 1) {
-				return callback(ip);
-			}
+			dns.resolve(
+				hostnames[0],
+				net.isIP(ip) === 6 ? "AAAA" : "A",
+				(resolveErr, resolvedIps) => {
+					// TODO: investigate SoaRecord class
+					if (!Array.isArray(resolvedIps)) {
+						return callback(ip);
+					}
 
-			for (const resolvedIp of resolvedIps) {
-				if (ip === resolvedIp) {
-					return callback(hostnames[0]);
+					if (resolveErr || resolvedIps.length < 1) {
+						return callback(ip);
+					}
+
+					for (const resolvedIp of resolvedIps) {
+						if (ip === resolvedIp) {
+							return callback(hostnames[0]);
+						}
+					}
+
+					return callback(ip);
 				}
-			}
-
-			return callback(ip);
+			);
 		});
-	});
+	} catch (err) {
+		log.error(
+			`failed to resolve rDNS for ${ip}, using ip instead`,
+			(err as any).toString()
+		);
+		setImmediate(callback, ip); // makes sure we always behave asynchronously
+	}
 }
