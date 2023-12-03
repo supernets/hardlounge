@@ -1,4 +1,4 @@
-name: Build
+name: Build - Yarn
 
 permissions:
   contents: read
@@ -43,6 +43,3 @@ jobs:
         run: yarn build
         env:
           NODE_ENV: production
-
-      - name: Test
-        run: yarn test
