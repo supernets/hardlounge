@@ -9,9 +9,10 @@
 			<h2 class="help-version-title">
 				<span>About Hard Lounge</span>
 				<small>
-					v{{ store.state.serverConfiguration?.version }} (<router-link
-						id="view-changelog"
-						to="/changelog"
+					v{{
+						store.state.serverConfiguration?.version
+					}}
+					(<router-link id="view-changelog" to="/changelog"
 						>release notes</router-link
 					>)
 				</small>
@@ -53,8 +54,8 @@
 			<div class="help-item">
 				<div class="description">
 					<p>
-						IRC.SUPERNETS.ORG #SUPERBOWL FUCK YOUR NETWORK COLD HARD CHATS THIS IS NOT
-						YOUR DADS FOOTBALL CHANNEL
+						IRC.SUPERNETS.ORG #SUPERBOWL FUCK YOUR NETWORK COLD HARD
+						CHATS THIS IS NOT YOUR DADS FOOTBALL CHANNEL
 					</p>
 				</div>
 			</div>
@@ -93,7 +94,9 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↓</kbd></span>
+					<span v-if="!isApple"
+						><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↓</kbd></span
+					>
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
@@ -103,7 +106,9 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↑</kbd></span>
+					<span v-if="!isApple"
+						><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↑</kbd></span
+					>
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↑</kbd></span>
 				</div>
 				<div class="description">
@@ -113,7 +118,9 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>←</kbd></span>
+					<span v-if="!isApple"
+						><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>←</kbd></span
+					>
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>←</kbd></span>
 				</div>
 				<div class="description">
@@ -123,7 +130,9 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>→</kbd></span>
+					<span v-if="!isApple"
+						><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>→</kbd></span
+					>
 					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>→</kbd></span>
 				</div>
 				<div class="description">
@@ -217,8 +226,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Close current contextual window (context menu, image viewer, topic edit,
-						etc) and remove focus from input.
+						Close current contextual window (context menu, image
+						viewer, topic edit, etc) and remove focus from input.
 					</p>
 				</div>
 			</div>
@@ -232,15 +241,17 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark any text typed after this shortcut to be colored. After hitting this
-						shortcut, enter an integer in the range
-						<code>0—15</code> to select the desired color, or use the autocompletion
-						menu to choose a color name (see below).
+						Mark any text typed after this shortcut to be colored.
+						After hitting this shortcut, enter an integer in the
+						range
+						<code>0—15</code> to select the desired color, or use
+						the autocompletion menu to choose a color name (see
+						below).
 					</p>
 					<p>
-						Background color can be specified by putting a comma and another integer in
-						the range <code>0—15</code> after the foreground color number
-						(autocompletion works too).
+						Background color can be specified by putting a comma and
+						another integer in the range <code>0—15</code> after the
+						foreground color number (autocompletion works too).
 					</p>
 					<p>
 						A color reference can be found
@@ -326,8 +337,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut to be reset to its original
-						formatting.
+						Mark all text typed after this shortcut to be reset to
+						its original formatting.
 					</p>
 				</div>
 			</div>
@@ -335,10 +346,11 @@
 			<h2>Autocompletion</h2>
 
 			<p>
-				To auto-complete nicknames, channels, commands, and emoji, type one of the
-				characters below to open a suggestion list. Use the <kbd>↑</kbd> and
-				<kbd>↓</kbd> keys to highlight an item, and insert it by pressing <kbd>Tab</kbd> or
-				<kbd>Enter</kbd> (or by clicking the desired item).
+				To auto-complete nicknames, channels and commands, type one of
+				the characters below to open a suggestion list. Use the
+				<kbd>↑</kbd> and <kbd>↓</kbd> keys to highlight an item, and
+				insert it by pressing <kbd>Tab</kbd> or <kbd>Enter</kbd> (or by
+				clicking the desired item).
 			</p>
 			<p>Autocompletion can be disabled in settings.</p>
 
@@ -369,18 +381,6 @@
 				</div>
 			</div>
 
-			<div class="help-item">
-				<div class="subject">
-					<code>:</code>
-				</div>
-				<div class="description">
-					<p>
-						Emoji (note: requires two search characters, to avoid conflicting with
-						common emoticons like <code>:)</code>)
-					</p>
-				</div>
-			</div>
-
 			<h2>Commands</h2>
 
 			<div class="help-item">
@@ -397,7 +397,9 @@
 					<code>/back</code>
 				</div>
 				<div class="description">
-					<p>Remove your away status (set with <code>/away</code>).</p>
+					<p>
+						Remove your away status (set with <code>/away</code>).
+					</p>
 				</div>
 			</div>
 
@@ -407,8 +409,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Ban (<code>+b</code>) a user from the current channel. This can be a
-						nickname or a hostmask.
+						Ban (<code>+b</code>) a user from the current channel.
+						This can be a nickname or a hostmask.
 					</p>
 				</div>
 			</div>
@@ -428,7 +430,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Collapse all previews in the current channel (opposite of
+						Collapse all previews in the current channel (opposite
+						of
 						<code>/expand</code>)
 					</p>
 				</div>
@@ -440,8 +443,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Connect to a new IRC network. If <code>port</code> starts with a
-						<code>+</code> sign, the connection will be made secure using TLS.
+						Connect to a new IRC network. If
+						<code>port</code> starts with a <code>+</code> sign, the
+						connection will be made secure using TLS.
 					</p>
 					<p>Alias: <code>/server</code></p>
 				</div>
@@ -453,7 +457,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Send a <abbr title="Client-to-client protocol">CTCP</abbr>
+						Send a
+						<abbr title="Client-to-client protocol">CTCP</abbr>
 						request. Read more about this on
 						<a
 							href="https://en.wikipedia.org/wiki/Client-to-client_protocol"
@@ -471,8 +476,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Remove op (<code>-o</code>) from one or several users in the current
-						channel.
+						Remove op (<code>-o</code>) from one or several users in
+						the current channel.
 					</p>
 				</div>
 			</div>
@@ -483,8 +488,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Remove voice (<code>-v</code>) from one or several users in the current
-						channel.
+						Remove voice (<code>-v</code>) from one or several users
+						in the current channel.
 					</p>
 				</div>
 			</div>
@@ -494,7 +499,10 @@
 					<code>/disconnect [message]</code>
 				</div>
 				<div class="description">
-					<p>Disconnect from the current network with an optionally-provided message.</p>
+					<p>
+						Disconnect from the current network with an
+						optionally-provided message.
+					</p>
 				</div>
 			</div>
 
@@ -517,8 +525,8 @@
 				<div class="description">
 					<p>
 						Invite a user to the specified channel. If
-						<code>channel</code> is omitted, user will be invited to the current
-						channel.
+						<code>channel</code> is omitted, user will be invited to
+						the current channel.
 					</p>
 				</div>
 			</div>
@@ -529,8 +537,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Block any messages from the specified user on the current network. This can
-						be a nickname or a hostmask.
+						Block any messages from the specified user on the
+						current network. This can be a nickname or a hostmask.
 					</p>
 				</div>
 			</div>
@@ -540,7 +548,9 @@
 					<code>/ignorelist</code>
 				</div>
 				<div class="description">
-					<p>Load the list of ignored users for the current network.</p>
+					<p>
+						Load the list of ignored users for the current network.
+					</p>
 				</div>
 			</div>
 
@@ -550,8 +560,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Join a channel. Password is only needed in protected channels and can
-						usually be omitted.
+						Join a channel. Password is only needed in protected
+						channels and can usually be omitted.
 					</p>
 				</div>
 			</div>
@@ -571,8 +581,10 @@
 				</div>
 				<div class="description">
 					<p>
-						Kick and ban (<code>+b</code>) a user from the current channel. Unlike
-						<code>/ban</code>, only nicknames (and not host masks) can be used.
+						Kick and ban (<code>+b</code>) a user from the current
+						channel. Unlike
+						<code>/ban</code>, only nicknames (and not host masks)
+						can be used.
 					</p>
 				</div>
 			</div>
@@ -582,7 +594,9 @@
 					<code>/list</code>
 				</div>
 				<div class="description">
-					<p>Retrieve a list of available channels on this network.</p>
+					<p>
+						Retrieve a list of available channels on this network.
+					</p>
 				</div>
 			</div>
 
@@ -592,8 +606,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Send an action message to the current channel. Hard Lounge will display it
-						inline, as if the message was posted in the third person.
+						Send an action message to the current channel. Hard
+						Lounge will display it inline, as if the message was
+						posted in the third person.
 					</p>
 				</div>
 			</div>
@@ -604,9 +619,10 @@
 				</div>
 				<div class="description">
 					<p>
-						Set the given flags to the current channel if the active window is a
-						channel, another user if the active window is a private message window, or
-						yourself if the current window is a server window.
+						Set the given flags to the current channel if the active
+						window is a channel, another user if the active window
+						is a private message window, or yourself if the current
+						window is a server window.
 					</p>
 				</div>
 			</div>
@@ -626,10 +642,12 @@
 				</div>
 				<div class="description">
 					<p>
-						Prevent messages from generating any feedback for a channel. This turns off
-						the highlight indicator, hides mentions and inhibits push notifications.
-						Muting a network lobby mutes the entire network. Not specifying any channel
-						target mutes the current channel. Revert with <code>/unmute</code>.
+						Prevent messages from generating any feedback for a
+						channel. This turns off the highlight indicator, hides
+						mentions and inhibits push notifications. Muting a
+						network lobby mutes the entire network. Not specifying
+						any channel target mutes the current channel. Revert
+						with <code>/unmute</code>.
 					</p>
 				</div>
 			</div>
@@ -657,7 +675,10 @@
 					<code>/op nick [...nick]</code>
 				</div>
 				<div class="description">
-					<p>Give op (<code>+o</code>) to one or several users in the current channel.</p>
+					<p>
+						Give op (<code>+o</code>) to one or several users in the
+						current channel.
+					</p>
 				</div>
 			</div>
 
@@ -667,8 +688,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Close the specified channel or private message window, or the current
-						channel if <code>channel</code> is omitted.
+						Close the specified channel or private message window,
+						or the current channel if <code>channel</code> is
+						omitted.
 					</p>
 					<p>Aliases: <code>/close</code>, <code>/leave</code></p>
 				</div>
@@ -680,8 +702,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Leave and immediately rejoin the current channel. Useful to quickly get op
-						from ChanServ in an empty channel, for example.
+						Leave and immediately rejoin the current channel. Useful
+						to quickly get op from ChanServ in an empty channel, for
+						example.
 					</p>
 					<p>Alias: <code>/cycle</code></p>
 				</div>
@@ -701,7 +724,10 @@
 					<code>/quit [message]</code>
 				</div>
 				<div class="description">
-					<p>Disconnect from the current network with an optional message.</p>
+					<p>
+						Disconnect from the current network with an optional
+						message.
+					</p>
 				</div>
 			</div>
 
@@ -739,8 +765,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Get the topic in the current channel. If <code>newtopic</code> is specified,
-						sets the topic in the current channel.
+						Get the topic in the current channel. If
+						<code>newtopic</code> is specified, sets the topic in
+						the current channel.
 					</p>
 				</div>
 			</div>
@@ -751,8 +778,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Unban (<code>-b</code>) a user from the current channel. This can be a
-						nickname or a hostmask.
+						Unban (<code>-b</code>) a user from the current channel.
+						This can be a nickname or a hostmask.
 					</p>
 				</div>
 			</div>
@@ -763,8 +790,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Unblock messages from the specified user on the current network. This can be
-						a nickname or a hostmask.
+						Unblock messages from the specified user on the current
+						network. This can be a nickname or a hostmask.
 					</p>
 				</div>
 			</div>
@@ -775,8 +802,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Un-mutes the given channel(s) or the current channel if no channel is
-						provided. See <code>/mute</code> for more information.
+						Un-mutes the given channel(s) or the current channel if
+						no channel is provided. See <code>/mute</code> for more
+						information.
 					</p>
 				</div>
 			</div>
@@ -787,7 +815,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Give voice (<code>+v</code>) to one or several users in the current channel.
+						Give voice (<code>+v</code>) to one or several users in
+						the current channel.
 					</p>
 				</div>
 			</div>
@@ -797,7 +826,10 @@
 					<code>/whois nick</code>
 				</div>
 				<div class="description">
-					<p>Retrieve information about the given user on the current network.</p>
+					<p>
+						Retrieve information about the given user on the current
+						network.
+					</p>
 				</div>
 			</div>
 
@@ -1193,8 +1225,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import {useStore} from "../../js/store";
+import { defineComponent, ref } from "vue";
+import { useStore } from "../../js/store";
 import SidebarToggle from "../SidebarToggle.vue";
 import VersionChecker from "../VersionChecker.vue";
 
@@ -1206,7 +1238,8 @@ export default defineComponent({
 	},
 	setup() {
 		const store = useStore();
-		const isApple = navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) || false;
+		const isApple =
+			navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) || false;
 		const isTouch = navigator.maxTouchPoints > 0;
 
 		return {

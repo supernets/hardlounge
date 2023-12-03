@@ -1,34 +1,14 @@
 import constants from "./constants";
 
 import Mousetrap from "mousetrap";
-import {Strategy, Textcomplete, StrategyProps} from "@textcomplete/core";
-import {TextareaEditor} from "@textcomplete/textarea";
+import { Strategy, Textcomplete, StrategyProps } from "@textcomplete/core";
+import { TextareaEditor } from "@textcomplete/textarea";
 
 import fuzzy from "fuzzy";
 
-import emojiMap from "./helpers/simplemap.json";
-import {store} from "./store";
+import { store } from "./store";
 
 export default enableAutocomplete;
-
-const emojiSearchTerms = Object.keys(emojiMap);
-const emojiStrategy: StrategyProps = {
-	id: "emoji",
-	match: /(^|\s):([-+\w:?]{2,}):?$/,
-	search(term: string, callback: (matches) => void) {
-		// Trim colon from the matched term,
-		// as we are unable to get a clean string from match regex
-		term = term.replace(/:$/, "");
-		callback(fuzzyGrep(term, emojiSearchTerms));
-	},
-	template([string, original]: [string, string]) {
-		return `<span class="emoji">${String(emojiMap[original])}</span> ${string}`;
-	},
-	replace([, original]: [string, string]) {
-		return "$1" + String(emojiMap[original]);
-	},
-	index: 2,
-};
 
 const nicksStrategy: StrategyProps = {
 	id: "nicks",
@@ -39,7 +19,12 @@ const nicksStrategy: StrategyProps = {
 		if (term[0] === "@") {
 			// TODO: type
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			callback(completeNicks(term.slice(1), true).map((val) => ["@" + val[0], "@" + val[1]]));
+			callback(
+				completeNicks(term.slice(1), true).map((val) => [
+					"@" + val[0],
+					"@" + val[1],
+				])
+			);
 		} else {
 			callback(completeNicks(term, true));
 		}
@@ -108,7 +93,9 @@ const foregroundColorStrategy: StrategyProps = {
 		callback(matchingColorCodes);
 	},
 	template(value: string[]) {
-		return `<span class="irc-fg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		return `<span class="irc-fg${parseInt(value[0], 10)}">${
+			value[1]
+		}</span>`;
 	},
 	replace(value: string) {
 		return "\x03" + value[0];
@@ -119,7 +106,11 @@ const foregroundColorStrategy: StrategyProps = {
 const backgroundColorStrategy: StrategyProps = {
 	id: "background-colors",
 	match: /\x03(\d{2}),(\d{0,2}|[A-Za-z ]{0,10})$/,
-	search(term: string, callback: (matchingColorCodes: string[][]) => void, match: string[]) {
+	search(
+		term: string,
+		callback: (matchingColorCodes: string[][]) => void,
+		match: string[]
+	) {
 		term = term.toLowerCase();
 		const matchingColorCodes = constants.colorCodeMap
 			.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
@@ -141,10 +132,10 @@ const backgroundColorStrategy: StrategyProps = {
 		callback(matchingColorCodes);
 	},
 	template(value: string[]) {
-		return `<span class="irc-fg${parseInt(value[2], 10)} irc-bg irc-bg${parseInt(
-			value[0],
+		return `<span class="irc-fg${parseInt(
+			value[2],
 			10
-		)}">${value[1]}</span>`;
+		)} irc-bg irc-bg${parseInt(value[0], 10)}">${value[1]}</span>`;
 	},
 	replace(value: string[]) {
 		return "\x03$1," + value[0];
@@ -179,7 +170,9 @@ function enableAutocomplete(input: HTMLTextAreaElement) {
 			const text = input.value;
 
 			if (tabCount === 0) {
-				lastMatch = text.substring(0, input.selectionStart).split(/\s/).pop() || "";
+				lastMatch =
+					text.substring(0, input.selectionStart).split(/\s/).pop() ||
+					"";
 
 				if (lastMatch.length === 0) {
 					return;
@@ -219,7 +212,6 @@ function enableAutocomplete(input: HTMLTextAreaElement) {
 	);
 
 	const strategies = [
-		emojiStrategy,
 		nicksStrategy,
 		chanStrategy,
 		commandStrategy,
@@ -261,7 +253,10 @@ function replaceNick(original: string, position = 1) {
 	}
 
 	// If there is whitespace in the input already, append space to nick
-	if (position > 0 && /\s/.test(store.state.activeChannel?.channel.pendingMessage || "")) {
+	if (
+		position > 0 &&
+		/\s/.test(store.state.activeChannel?.channel.pendingMessage || "")
+	) {
 		return original + " ";
 	}
 
@@ -285,14 +280,19 @@ function rawNicks() {
 	if (store.state.activeChannel.channel.users.length > 0) {
 		const users = store.state.activeChannel.channel.users.slice();
 
-		return users.sort((a, b) => b.lastMessage - a.lastMessage).map((u) => u.nick);
+		return users
+			.sort((a, b) => b.lastMessage - a.lastMessage)
+			.map((u) => u.nick);
 	}
 
 	const me = store.state.activeChannel.network.nick;
 	const otherUser = store.state.activeChannel.channel.name;
 
 	// If this is a query, add their name to autocomplete
-	if (me !== otherUser && store.state.activeChannel.channel.type === "query") {
+	if (
+		me !== otherUser &&
+		store.state.activeChannel.channel.type === "query"
+	) {
 		return [otherUser, me];
 	}
 
