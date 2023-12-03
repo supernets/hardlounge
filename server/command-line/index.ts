@@ -3,7 +3,7 @@ import log from "../log";
 import fs from "fs";
 import path from "path";
 import colors from "chalk";
-import {Command} from "commander";
+import { Command } from "commander";
 import Helper from "../helper";
 import Config from "../config";
 import Utils from "./utils";
@@ -42,6 +42,7 @@ program.addCommand(require("./install").default);
 program.addCommand(require("./uninstall").default);
 program.addCommand(require("./upgrade").default);
 program.addCommand(require("./outdated").default);
+program.addCommand(require("./storage").default);
 
 if (!Config.values.public) {
 	require("./users").default.forEach((command: Command) => {
@@ -64,7 +65,7 @@ function createPackagesFolder() {
 	const packagesConfig = path.join(packagesPath, "package.json");
 
 	// Create node_modules folder, otherwise yarn will start walking upwards to find one
-	fs.mkdirSync(path.join(packagesPath, "node_modules"), {recursive: true});
+	fs.mkdirSync(path.join(packagesPath, "node_modules"), { recursive: true });
 
 	// Create package.json with private set to true, if it doesn't exist already
 	if (!fs.existsSync(packagesConfig)) {
@@ -99,7 +100,9 @@ function verifyFileOwner() {
 		);
 	}
 
-	const configStat = fs.statSync(path.join(Config.getHomePath(), "config.js"));
+	const configStat = fs.statSync(
+		path.join(Config.getHomePath(), "config.js")
+	);
 
 	if (configStat && configStat.uid !== uid) {
 		log.warn(

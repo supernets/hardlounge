@@ -5,12 +5,12 @@ import fs from "fs";
 import path from "path";
 
 import Auth from "./plugins/auth";
-import Client, {UserConfig} from "./client";
+import Client, { UserConfig } from "./client";
 import Config from "./config";
-import {NetworkConfig} from "./models/network";
+import { NetworkConfig } from "./models/network";
 import WebPush from "./plugins/webpush";
 import log from "./log";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 
 class ClientManager {
 	clients: Client[];
@@ -107,17 +107,21 @@ class ClientManager {
 
 					// Existing users removed since last time users were loaded
 					_.difference(loaded, updatedUsers).forEach((name) => {
-						const client = _.find(this.clients, {name});
+						const client = _.find(this.clients, { name });
 
 						if (client) {
 							client.quit(true);
 							this.clients = _.without(this.clients, client);
-							log.info(`User ${colors.bold(name)} disconnected and removed.`);
+							log.info(
+								`User ${colors.bold(
+									name
+								)} disconnected and removed.`
+							);
 						}
 					});
 				},
 				1000,
-				{maxWait: 10000}
+				{ maxWait: 10000 }
 			)
 		);
 	}
@@ -197,7 +201,8 @@ class ClientManager {
 			if (
 				userFolderStat &&
 				userFileStat &&
-				(userFolderStat.uid !== userFileStat.uid || userFolderStat.gid !== userFileStat.gid)
+				(userFolderStat.uid !== userFileStat.uid ||
+					userFolderStat.gid !== userFileStat.gid)
 			) {
 				log.warn(
 					`User ${colors.green(
@@ -227,13 +232,16 @@ class ClientManager {
 			networks: client.networks.map((n) => n.export()),
 		});
 		const newUser = JSON.stringify(json, null, "\t");
-		const newHash = crypto.createHash("sha256").update(newUser).digest("hex");
+		const newHash = crypto
+			.createHash("sha256")
+			.update(newUser)
+			.digest("hex");
 
-		return {newUser, newHash};
+		return { newUser, newHash };
 	}
 
 	saveUser(client: Client, callback?: (err?: any) => void) {
-		const {newUser, newHash} = this.getDataToSave(client);
+		const { newUser, newHash } = this.getDataToSave(client);
 
 		// Do not write to disk if the exported data hasn't actually changed
 		if (client.fileHash === newHash) {
@@ -254,7 +262,9 @@ class ClientManager {
 			return callback ? callback() : true;
 		} catch (e: any) {
 			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
+			log.error(
+				`Failed to update user ${colors.green(client.name)} (${e})`
+			);
 
 			if (callback) {
 				callback(e);
@@ -266,7 +276,9 @@ class ClientManager {
 		const userPath = Config.getUserConfigPath(name);
 
 		if (!fs.existsSync(userPath)) {
-			log.error(`Tried to remove non-existing user ${colors.green(name)}.`);
+			log.error(
+				`Tried to remove non-existing user ${colors.green(name)}.`
+			);
 			return false;
 		}
 
@@ -275,7 +287,7 @@ class ClientManager {
 		return true;
 	}
 
-	private readUserConfig(name: string) {
+	readUserConfig(name: string) {
 		const userPath = Config.getUserConfigPath(name);
 
 		if (!fs.existsSync(userPath)) {
