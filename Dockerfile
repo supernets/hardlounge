@@ -4,10 +4,10 @@ RUN apk add --no-cache --virtual=build-dependencies build-base git python3-dev &
 USER node
 WORKDIR /var/opt/hardlounge-src
 ENV THELOUNGE_HOME /var/opt/hardlounge
+COPY package.json yarn.lock .
+RUN yarn install
 COPY . .
-#RUN git clone https://git.supernets.org/supernets/hardlounge.git --depth 1 .
-RUN yarn install && \
-    NODE_ENV=production yarn build && \
+RUN NODE_ENV=production yarn build && \
     yarn link && \
     yarn --non-interactive cache clean && \
     ln -s /var/opt/hardlounge-src/index.js /var/opt/hardlounge-src/hardlounge
