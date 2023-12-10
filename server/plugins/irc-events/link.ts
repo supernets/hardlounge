@@ -1,11 +1,11 @@
 import * as cheerio from "cheerio";
 import got from "got";
-import {URL} from "url";
+import { URL } from "url";
 import mime from "mime-types";
 
 import log from "../../log";
 import Config from "../../config";
-import {findLinksWithSchema} from "../../../shared/linkify";
+import { findLinksWithSchema } from "../../../shared/linkify";
 import storage from "../storage";
 import Client from "../../client";
 import Chan from "../../models/chan";
@@ -37,57 +37,65 @@ export type LinkPreview = {
 	thumbActualUrl?: string;
 };
 
-export default function (client: Client, chan: Chan, msg: Msg, cleanText: string) {
+export default function (
+	client: Client,
+	chan: Chan,
+	msg: Msg,
+	cleanText: string
+) {
 	if (!Config.values.prefetch) {
 		return;
 	}
 
-	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks: LinkPreview[], link) => {
-		const url = normalizeURL(link.link);
+	msg.previews = findLinksWithSchema(cleanText).reduce(
+		(cleanLinks: LinkPreview[], link) => {
+			const url = normalizeURL(link.link);
 
-		// If the URL is invalid and cannot be normalized, don't fetch it
-		if (!url) {
-			return cleanLinks;
-		}
+			// If the URL is invalid and cannot be normalized, don't fetch it
+			if (!url) {
+				return cleanLinks;
+			}
 
-		// If there are too many urls in this message, only fetch first X valid links
-		if (cleanLinks.length > 4) {
-			return cleanLinks;
-		}
+			// If there are too many urls in this message, only fetch first X valid links
+			if (cleanLinks.length > 4) {
+				return cleanLinks;
+			}
 
-		// Do not fetch duplicate links twice
-		if (cleanLinks.some((l) => l.link === link.link)) {
-			return cleanLinks;
-		}
+			// Do not fetch duplicate links twice
+			if (cleanLinks.some((l) => l.link === link.link)) {
+				return cleanLinks;
+			}
 
-		const preview: LinkPreview = {
-			type: "loading",
-			head: "",
-			body: "",
-			thumb: "",
-			size: -1,
-			link: link.link, // Send original matched link to the client
-			shown: null,
-		};
+			const preview: LinkPreview = {
+				type: "loading",
+				head: "",
+				body: "",
+				thumb: "",
+				size: -1,
+				link: link.link, // Send original matched link to the client
+				shown: null,
+			};
 
-		cleanLinks.push(preview);
+			cleanLinks.push(preview);
 
-		fetch(url, {
-			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-			language: client.config.browser?.language || "",
-		})
-			.then((res) => {
-				parse(msg, chan, preview, res, client);
+			fetch(url, {
+				accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+				language: client.config.browser?.language || "",
 			})
-			.catch((err) => {
-				preview.type = "error";
-				preview.error = "message";
-				preview.message = err.message;
-				emitPreview(client, chan, msg, preview);
-			});
+				.then((res) => {
+					parse(msg, chan, preview, res, client);
+				})
+				.catch((err) => {
+					preview.type = "error";
+					preview.error = "message";
+					preview.message = err.message;
+					emitPreview(client, chan, msg, preview);
+				});
 
-		return cleanLinks;
-	}, []);
+			return cleanLinks;
+		},
+		[]
+	);
 }
 
 function parseHtml(preview, res, client: Client) {
@@ -117,7 +125,10 @@ function parseHtml(preview, res, client: Client) {
 					preview.body = preview.body.substr(0, 300);
 				}
 
-				if (!Config.values.prefetchStorage && Config.values.disableMediaPreview) {
+				if (
+					!Config.values.prefetchStorage &&
+					Config.values.disableMediaPreview
+				) {
 					resolve(res);
 					return;
 				}
@@ -135,12 +146,15 @@ function parseHtml(preview, res, client: Client) {
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (thumb.length) {
-					fetch(thumb, {language: client.config.browser?.language || ""})
+					fetch(thumb, {
+						language: client.config.browser?.language || "",
+					})
 						.then((resThumb) => {
 							if (
 								resThumb !== null &&
 								imageTypeRegex.test(resThumb.type) &&
-								resThumb.size <= Config.values.prefetchMaxImageSize * 1024
+								resThumb.size <=
+									Config.values.prefetchMaxImageSize * 1024
 							) {
 								preview.thumbActualUrl = thumb;
 							}
@@ -156,7 +170,11 @@ function parseHtml(preview, res, client: Client) {
 }
 
 // TODO: type $
-function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> {
+function parseHtmlMedia(
+	$: any,
+	preview,
+	client: Client
+): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
@@ -183,7 +201,10 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 				return;
 			}
 
-			$(`meta[property="og:${type}:type"]`).each(function (this: cheerio.Element, i: number) {
+			$(`meta[property="og:${type}:type"]`).each(function (
+				this: cheerio.Element,
+				i: number
+			) {
 				const mimeType = $(this).attr("content");
 
 				if (!mimeType) {
@@ -192,7 +213,9 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 
 				if (mediaTypeRegex.test(mimeType)) {
 					// If we match a clean video or audio tag, parse that as a preview instead
-					let mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
+					let mediaUrl = $(
+						$(`meta[property="og:${type}"]`).get(i)
+					).attr("content");
 
 					if (!mediaUrl) {
 						return;
@@ -216,7 +239,10 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 						language: client.config.browser?.language || "",
 					})
 						.then((resMedia) => {
-							if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
+							if (
+								resMedia === null ||
+								!mediaTypeRegex.test(resMedia.type)
+							) {
 								return reject();
 							}
 
@@ -239,7 +265,13 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 	});
 }
 
-function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, client: Client) {
+function parse(
+	msg: Msg,
+	chan: Chan,
+	preview: LinkPreview,
+	res: FetchRequest,
+	client: Client
+) {
 	let promise: Promise<FetchRequest | null> | null = null;
 
 	preview.size = res.size;
@@ -262,7 +294,10 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, cl
 		case "image/jxl":
 		case "image/webp":
 		case "image/avif":
-			if (!Config.values.prefetchStorage && Config.values.disableMediaPreview) {
+			if (
+				!Config.values.prefetchStorage &&
+				Config.values.disableMediaPreview
+			) {
 				return removePreview(msg, preview);
 			}
 
@@ -330,10 +365,18 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, cl
 		return handlePreview(client, chan, msg, preview, res);
 	}
 
-	void promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
+	void promise.then((newRes) =>
+		handlePreview(client, chan, msg, preview, newRes)
+	);
 }
 
-function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview, res) {
+function handlePreview(
+	client: Client,
+	chan: Chan,
+	msg: Msg,
+	preview: LinkPreview,
+	res
+) {
 	const thumb = preview.thumbActualUrl || "";
 	delete preview.thumbActualUrl;
 
@@ -363,7 +406,12 @@ function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPrevie
 	});
 }
 
-function emitPreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview) {
+function emitPreview(
+	client: Client,
+	chan: Chan,
+	msg: Msg,
+	preview: LinkPreview
+) {
 	// If there is no title but there is preview or description, set title
 	// otherwise bail out and show no preview
 	if (!preview.head.length && preview.type === "link") {
@@ -396,7 +444,7 @@ function getRequestHeaders(headers: Record<string, string>) {
 		// Certain websites like Amazon only add <meta> tags to known bots,
 		// lets pretend to be them to get the metadata
 		"User-Agent":
-			"Mozilla/5.0 (compatible; Hard Lounge IRC Client; COLD HARD CHATS; +https://git.supernets.org/supernets/hardlounge)" +
+			"Mozilla/5.0 (compatible; Hard Lounge IRC Client; COLD HARD CHATS ONLY ON IRC.SUPERNETS.ORG; +https://git.supernets.org/supernets/hardlounge)" +
 			" facebookexternalhit/1.1 Twitterbot/1.0",
 		Accept: headers.accept || "*/*",
 		"X-Purpose": "preview",
@@ -442,17 +490,24 @@ function fetch(uri: string, headers: Record<string, string>) {
 
 			gotStream
 				.on("response", function (res) {
-					contentLength = parseInt(res.headers["content-length"], 10) || 0;
+					contentLength =
+						parseInt(res.headers["content-length"], 10) || 0;
 					contentType = res.headers["content-type"];
 
 					if (contentType && imageTypeRegex.test(contentType)) {
 						// response is an image
 						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
 						// and if file is not to be stored we don't need to download further either
-						if (contentLength > limit || !Config.values.prefetchStorage) {
+						if (
+							contentLength > limit ||
+							!Config.values.prefetchStorage
+						) {
 							gotStream.destroy();
 						}
-					} else if (contentType && mediaTypeRegex.test(contentType)) {
+					} else if (
+						contentType &&
+						mediaTypeRegex.test(contentType)
+					) {
 						// We don't need to download the file any further after we received content-type header
 						gotStream.destroy();
 					} else {
@@ -482,13 +537,16 @@ function fetch(uri: string, headers: Record<string, string>) {
 					let type = "";
 
 					// If we downloaded more data then specified in Content-Length, use real data size
-					const size = contentLength > buffer.length ? contentLength : buffer.length;
+					const size =
+						contentLength > buffer.length
+							? contentLength
+							: buffer.length;
 
 					if (contentType) {
 						type = contentType.split(/ *; */).shift() || "";
 					}
 
-					resolve({data: buffer, type, size});
+					resolve({ data: buffer, type, size });
 				});
 		} catch (e: any) {
 			return reject(e);
