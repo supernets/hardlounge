@@ -346,7 +346,6 @@ export default async function (
 				});
 		}
 
-		changelog.checkForUpdates(manager);
 	});
 
 	return server;

@@ -1,37 +1,6 @@
 <template>
 	<div id="version-checker" :class="[store.state.versionStatus]">
-		<p v-if="store.state.versionStatus === 'loading'">Checking for updates…</p>
-		<p v-if="store.state.versionStatus === 'new-version'">
-			Hard Lounge <b>{{ store.state.versionData?.latest.version }}</b>
-			<template v-if="store.state.versionData?.latest.prerelease"> (pre-release) </template>
-			is now available.
-			<br />
-
-			<a :href="store.state.versionData?.latest.url" target="_blank" rel="noopener">
-				Read more on GitHub
-			</a>
-		</p>
-		<p v-if="store.state.versionStatus === 'new-packages'">
-			Hard Lounge is up to date, but there are out of date packages Run
-			<code>thelounge upgrade</code> on the server to upgrade packages.
-		</p>
-		<template v-if="store.state.versionStatus === 'up-to-date'">
-			<p>Hard Lounge is up to date!</p>
-
-			<button
-				v-if="store.state.versionDataExpired"
-				id="check-now"
-				class="btn btn-small"
-				@click="checkNow"
-			>
-				Check now
-			</button>
-		</template>
-		<template v-if="store.state.versionStatus === 'error'">
-			<p>Information about latest release could not be retrieved.</p>
-
-			<button id="check-now" class="btn btn-small" @click="checkNow">Try again</button>
-		</template>
+		<p>Check for updates yourself you lazy bum</p>
 	</div>
 </template>
 

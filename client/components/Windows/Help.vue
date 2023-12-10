@@ -12,21 +12,17 @@
 					v{{
 						store.state.serverConfiguration?.version
 					}}
-					(<router-link id="view-changelog" to="/changelog"
-						>release notes</router-link
-					>)
 				</small>
 			</h2>
 
 			<div class="about">
-				<VersionChecker />
 				<p>
 					<a
 						href="https://git.supernets.org/supernets/hardlounge/"
 						target="_blank"
 						rel="noopener"
 						class="website-link"
-						>Website</a
+						>Source Code</a
 					>
 				</p>
 				<p>
@@ -35,7 +31,7 @@
 						target="_blank"
 						rel="noopener"
 						class="documentation-link"
-						>Documentation</a
+						>Documentation (The Lounge)</a
 					>
 				</p>
 				<p>
@@ -1228,14 +1224,12 @@
 import { defineComponent, ref } from "vue";
 import { useStore } from "../../js/store";
 import SidebarToggle from "../SidebarToggle.vue";
-import VersionChecker from "../VersionChecker.vue";
 
 export default defineComponent({
 	name: "Help",
 	components: {
-		SidebarToggle,
-		VersionChecker,
-	},
+		SidebarToggle
+		},
 	setup() {
 		const store = useStore();
 		const isApple =

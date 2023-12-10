@@ -16,7 +16,6 @@ describe("Server", function () {
 	let server;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 	let logWarnStub: sinon.SinonStub<string[], void>;
-	let checkForUpdatesStub: sinon.SinonStub<[manager: ClientManager], void>;
 
 	before(async function () {
 		logInfoStub = sinon.stub(log, "info");
@@ -34,7 +33,6 @@ describe("Server", function () {
 			console.error(`Unhandled log.warn in server tests: ${args.join(" ")}`);
 		});
 
-		checkForUpdatesStub = sinon.stub(changelog, "checkForUpdates");
 		server = await (await import("../server/server")).default({} as any);
 	});
 
@@ -43,7 +41,6 @@ describe("Server", function () {
 		// in case setup crashed for any reason
 		logInfoStub.restore();
 		logWarnStub.restore();
-		checkForUpdatesStub.restore();
 		server.close(done);
 	});
 
