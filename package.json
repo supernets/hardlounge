@@ -1,7 +1,7 @@
 {
   "name": "@supernets/hardlounge",
   "description": "The self-hosted Web IRC client",
-  "version": "4.4.1-1",
+  "version": "4.4.1-2",
   "preferGlobal": true,
   "bin": {
     "hardlounge": "index.js"
