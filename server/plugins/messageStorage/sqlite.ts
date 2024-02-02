@@ -38,7 +38,7 @@ type Rollback = {
 	stmts: string[];
 };
 
-export const currentSchemaVersion = 1679743888000; // use `new Date().getTime()`
+export const currentSchemaVersion = 1703322560448; // use `new Date().getTime()`
 
 // Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
@@ -57,6 +57,7 @@ const schema = [
 	)`,
 	"CREATE INDEX network_channel ON messages (network, channel)",
 	"CREATE INDEX time ON messages (time)",
+	"CREATE INDEX msg_type_idx on messages (type)",
 ];
 
 // the migrations will be executed in an exclusive transaction as a whole
@@ -90,6 +91,10 @@ export const migrations: Migration[] = [
 			)`,
 		],
 	},
+	{
+		version: 1703322560448,
+		stmts: ["CREATE INDEX msg_type_idx on messages (type)"]
+	}
 ];
 
 // down migrations need to restore the state of the prior version.
@@ -103,6 +108,10 @@ export const rollbacks: Rollback[] = [
 		version: 1679743888000,
 		stmts: [], // here we can't drop the tables, as we use them in the code, so just leave those in
 	},
+	{
+		version: 1703322560448,
+		stmts: ["drop INDEX msg_type_idx"]
+	}
 ];
 
 class Deferred {
