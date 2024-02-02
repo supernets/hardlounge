@@ -159,12 +159,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 	async setup_new_db() {
 		for (const stmt of schema) {
-			await this.serialize_run(stmt, []);
+			await this.serialize_run(stmt);
 		}
 
 		await this.serialize_run(
 			"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
-			[currentSchemaVersion.toString()]
+			currentSchemaVersion.toString()
 		);
 	}
 
@@ -194,7 +194,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	async update_version_in_db() {
 		return this.serialize_run(
 			"UPDATE options SET value = ? WHERE name = 'schema_version'",
-			[currentSchemaVersion.toString()]
+			currentSchemaVersion.toString()
 		);
 	}
 
@@ -206,14 +206,14 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const to_execute = necessaryMigrations(dbVersion);
 
 		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
-			await this.serialize_run(stmt, []);
+			await this.serialize_run(stmt);
 		}
 
 		await this.update_version_in_db();
 	}
 
 	async run_pragmas() {
-		await this.serialize_run("PRAGMA foreign_keys = ON;", []);
+		await this.serialize_run("PRAGMA foreign_keys = ON;");
 	}
 
 	async run_migrations() {
@@ -225,7 +225,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			return; // nothing to do
 		}
 
-		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION", []);
+		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION");
 
 		try {
 			if (version === 0) {
@@ -236,12 +236,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 			await this.insert_rollback_since(version);
 		} catch (err) {
-			await this.serialize_run("ROLLBACK", []);
+			await this.serialize_run("ROLLBACK");
 			throw err;
 		}
 
-		await this.serialize_run("COMMIT", []);
-		await this.serialize_run("VACUUM", []);
+		await this.serialize_run("COMMIT");
+		await this.serialize_run("VACUUM");
 	}
 
 	async close() {
@@ -296,7 +296,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	async delete_migrations_older_than(version: number) {
 		return this.serialize_run(
 			"delete from migrations where migrations.version > ?",
-			[version]
+			version
 		);
 	}
 
@@ -315,7 +315,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		for (const rollback of _rollbacks) {
 			for (const stmt of rollback.stmts) {
-				await this.serialize_run(stmt, []);
+				await this.serialize_run(stmt);
 			}
 		}
 
@@ -330,18 +330,18 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			throw Error(`${version} is not a valid version to downgrade to`);
 		}
 
-		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION", []);
+		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION");
 
 		let new_version: number;
 
 		try {
 			new_version = await this._downgrade_to(version);
 		} catch (err) {
-			await this.serialize_run("ROLLBACK", []);
+			await this.serialize_run("ROLLBACK");
 			throw err;
 		}
 
-		await this.serialize_run("COMMIT", []);
+		await this.serialize_run("COMMIT");
 		return new_version;
 	}
 
@@ -369,8 +369,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 					`insert into rollback_steps
 					(migration_id, step, statement)
 					values (?, ?, ?)`,
-					[migration.id, step, stmt]
-				);
+					migration.id,
+					step,
+					stmt
+					);
 				step++;
 			}
 		}
@@ -401,13 +403,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		await this.serialize_run(
 			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-			[
-				network.uuid,
-				channel.name.toLowerCase(),
-				msg.time.getTime(),
-				msg.type,
-				JSON.stringify(clonedMsg),
-			]
+			network.uuid,
+			channel.name.toLowerCase(),
+			msg.time.getTime(),
+			msg.type,
+			JSON.stringify(clonedMsg)
 		);
 	}
 
@@ -420,7 +420,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		await this.serialize_run(
 			"DELETE FROM messages WHERE network = ? AND channel = ?",
-			[network.uuid, channel.name.toLowerCase()]
+			network.uuid, 
+			channel.name.toLowerCase()
 		);
 	}
 
@@ -502,7 +503,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		return this.isEnabled;
 	}
 
-	private serialize_run(stmt: string, params: any[]): Promise<void> {
+	private serialize_run(stmt: string, ...params: any[]): Promise<number> {
 		return new Promise((resolve, reject) => {
 			this.database.serialize(() => {
 				this.database.run(stmt, params, (err) => {
