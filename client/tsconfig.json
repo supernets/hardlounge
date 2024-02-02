@@ -11,6 +11,7 @@
     "../server/log.ts",
     "../server/config.ts",
     "../server/client.ts",
+    "../server/storageCleaner.ts",
     "../server/clientManager.ts",
     "../server/identification.ts",
     "../server/plugins/changelog.ts",
@@ -44,14 +45,16 @@
   "compilerOptions": {
     "sourceMap": false /*Create source map files for emitted JavaScript files. See more: https://www.typescriptlang.org/tsconfig#sourceMap */,
     "jsx": "preserve" /* Specify what JSX code is generated. */,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     // this enables stricter inference for data properties on `this`
     "strict": true,
     // if using webpack 2+ or rollup, to leverage tree shaking:
     "module": "es2020",
     "moduleResolution": "node",
-
     // TODO: Remove eventually
     "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
   } /* Instructs the TypeScript compiler how to compile .ts files. */

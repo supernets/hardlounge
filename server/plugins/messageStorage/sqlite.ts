@@ -11,8 +11,10 @@ import type {
 	SearchResponse,
 	SearchQuery,
 	SearchableMessageStorage,
+	DeletionRequest
 } from "./types";
 import Network from "../../models/network";
+import { threadId } from "worker_threads";
 
 // TODO; type
 let sqlite3: any;
@@ -36,7 +38,7 @@ type Rollback = {
 	stmts: string[];
 };
 
-export const currentSchemaVersion = 1679743888000; // use `new Date().getTime()`
+export const currentSchemaVersion = 1703322560448; // use `new Date().getTime()`
 
 // Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
@@ -55,6 +57,7 @@ const schema = [
 	)`,
 	"CREATE INDEX network_channel ON messages (network, channel)",
 	"CREATE INDEX time ON messages (time)",
+	"CREATE INDEX msg_type_idx on messages (type)",
 ];
 
 // the migrations will be executed in an exclusive transaction as a whole
@@ -88,6 +91,10 @@ export const migrations: Migration[] = [
 			)`,
 		],
 	},
+	{
+		version: 1703322560448,
+		stmts: ["CREATE INDEX msg_type_idx on messages (type)"]
+	}
 ];
 
 // down migrations need to restore the state of the prior version.
@@ -101,6 +108,10 @@ export const rollbacks: Rollback[] = [
 		version: 1679743888000,
 		stmts: [], // here we can't drop the tables, as we use them in the code, so just leave those in
 	},
+	{
+		version: 1703322560448,
+		stmts: ["drop INDEX msg_type_idx"]
+	}
 ];
 
 class Deferred {
@@ -126,19 +137,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		this.initDone = new Deferred();
 	}
 
-	async _enable() {
-		const logsPath = Config.getUserLogsPath();
-		const sqlitePath = path.join(logsPath, `${this.userName}.sqlite3`);
-
-		try {
-			await fs.mkdir(logsPath, { recursive: true });
-		} catch (e) {
-			throw Helper.catch_to_error("Unable to create logs directory", e);
-		}
-
-		this.isEnabled = true;
-
-		this.database = new sqlite3.Database(sqlitePath);
+	async _enable(connection_string: string) {
+		this.database = new sqlite3.Database(connection_string);
 
 		try {
 			await this.run_pragmas(); // must be done outside of a transaction
@@ -147,11 +147,22 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			this.isEnabled = false;
 			throw Helper.catch_to_error("Migration failed", e);
 		}
+
+		this.isEnabled = true;
 	}
 
 	async enable() {
+		const logsPath = Config.getUserLogsPath();
+		const sqlitePath = path.join(logsPath, `${this.userName}.sqlite3`);
+
 		try {
-			await this._enable();
+			await fs.mkdir(logsPath, {recursive: true});
+		} catch (e) {
+			throw Helper.catch_to_error("Unable to create logs directory", e);
+		}
+
+		try {
+			await this._enable(sqlitePath);
 		} finally {
 			this.initDone.resolve(); // unblock the instance methods
 		}
@@ -159,12 +170,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 	async setup_new_db() {
 		for (const stmt of schema) {
-			await this.serialize_run(stmt, []);
+			await this.serialize_run(stmt);
 		}
 
 		await this.serialize_run(
 			"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
-			[currentSchemaVersion.toString()]
+			currentSchemaVersion.toString()
 		);
 	}
 
@@ -194,7 +205,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	async update_version_in_db() {
 		return this.serialize_run(
 			"UPDATE options SET value = ? WHERE name = 'schema_version'",
-			[currentSchemaVersion.toString()]
+			currentSchemaVersion.toString()
 		);
 	}
 
@@ -206,14 +217,14 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const to_execute = necessaryMigrations(dbVersion);
 
 		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
-			await this.serialize_run(stmt, []);
+			await this.serialize_run(stmt);
 		}
 
 		await this.update_version_in_db();
 	}
 
 	async run_pragmas() {
-		await this.serialize_run("PRAGMA foreign_keys = ON;", []);
+		await this.serialize_run("PRAGMA foreign_keys = ON;");
 	}
 
 	async run_migrations() {
@@ -225,7 +236,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			return; // nothing to do
 		}
 
-		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION", []);
+		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION");
 
 		try {
 			if (version === 0) {
@@ -236,12 +247,16 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 			await this.insert_rollback_since(version);
 		} catch (err) {
-			await this.serialize_run("ROLLBACK", []);
+			await this.serialize_run("ROLLBACK");
 			throw err;
 		}
 
-		await this.serialize_run("COMMIT", []);
-		await this.serialize_run("VACUUM", []);
+		await this.serialize_run("COMMIT");
+		await this.serialize_run("VACUUM");
+	}
+
+	async vacuum() {
+		await this.serialize_run("VACUUM");
 	}
 
 	async close() {
@@ -296,7 +311,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	async delete_migrations_older_than(version: number) {
 		return this.serialize_run(
 			"delete from migrations where migrations.version > ?",
-			[version]
+			version
 		);
 	}
 
@@ -315,7 +330,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		for (const rollback of _rollbacks) {
 			for (const stmt of rollback.stmts) {
-				await this.serialize_run(stmt, []);
+				await this.serialize_run(stmt);
 			}
 		}
 
@@ -330,18 +345,18 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			throw Error(`${version} is not a valid version to downgrade to`);
 		}
 
-		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION", []);
+		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION");
 
 		let new_version: number;
 
 		try {
 			new_version = await this._downgrade_to(version);
 		} catch (err) {
-			await this.serialize_run("ROLLBACK", []);
+			await this.serialize_run("ROLLBACK");
 			throw err;
 		}
 
-		await this.serialize_run("COMMIT", []);
+		await this.serialize_run("COMMIT");
 		return new_version;
 	}
 
@@ -369,8 +384,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 					`insert into rollback_steps
 					(migration_id, step, statement)
 					values (?, ?, ?)`,
-					[migration.id, step, stmt]
-				);
+					migration.id,
+					step,
+					stmt
+					);
 				step++;
 			}
 		}
@@ -401,13 +418,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		await this.serialize_run(
 			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-			[
-				network.uuid,
-				channel.name.toLowerCase(),
-				msg.time.getTime(),
-				msg.type,
-				JSON.stringify(clonedMsg),
-			]
+			network.uuid,
+			channel.name.toLowerCase(),
+			msg.time.getTime(),
+			msg.type,
+			JSON.stringify(clonedMsg)
 		);
 	}
 
@@ -420,7 +435,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		await this.serialize_run(
 			"DELETE FROM messages WHERE network = ? AND channel = ?",
-			[network.uuid, channel.name.toLowerCase()]
+			network.uuid, 
+			channel.name.toLowerCase()
 		);
 	}
 
@@ -498,20 +514,47 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		};
 	}
 
+	async deleteMessages(req: DeletionRequest): Promise<number> {
+		await this.initDone.promise;
+		let sql = "delete from messages where id in (select id from messages where\n";
+
+		// We roughly get a timestamp from N days before.
+		// We don't adjust for daylight savings time or other weird time jumps
+		const millisecondsInDay = 24 * 60 * 60 * 1000;
+		const deleteBefore = Date.now() - req.olderThanDays * millisecondsInDay;
+		sql += `time <= ${deleteBefore}\n`;
+
+		let typeClause = "";
+
+		if (req.messageTypes !== null) {
+			typeClause = `type in (${req.messageTypes.map((type) => `'${type}'`).join(",")})\n`;
+		}
+
+		if (typeClause) {
+			sql += `and ${typeClause}`;
+		}
+
+		sql += "order by time asc\n";
+		sql += `limit ${req.limit}\n`;
+		sql += ")";
+
+		return this.serialize_run(sql);
+	}
+
 	canProvideMessages() {
 		return this.isEnabled;
 	}
 
-	private serialize_run(stmt: string, params: any[]): Promise<void> {
+	private serialize_run(stmt: string, ...params: any[]): Promise<number> {
 		return new Promise((resolve, reject) => {
 			this.database.serialize(() => {
-				this.database.run(stmt, params, (err) => {
+				this.database.run(stmt, params, function(err) {
 					if (err) {
 						reject(err);
 						return;
 					}
 
-					resolve();
+					resolve(this.changes); // number of affected rows, 'this' is re-bound by sqlite3
 				});
 			});
 		});
